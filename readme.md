@@ -48,3 +48,8 @@ This price is given as a _range_ as there is variances in pricing of some Lutron
 
 
 Pricing information is taken from the trade brochure.
+
+
+## Disclaimer
+
+The _Lutron_ and _Lutron Caséta_ names both belong to the Lutron Electronics Co. Any/all Caséta product names used in this tool also belong to the Lutron Electronics Co.
