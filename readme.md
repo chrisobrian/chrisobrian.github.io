@@ -13,7 +13,7 @@ This is a simple tool to use. **Click any space** in the floor map that is not b
 
 - **Dimmers & Controllers** are physically connected to the circuit and provide the actual control over the fixtures. Once a dimmer has been created, click and hold to drag the "control signal" to each of the fixtures that the dimmer or controller will govern. **Dimmers and Controllers are _square_**.
 
-- **Remotes** are devices that can control dimmers/controllers. The remotes *do not* govern the fixtures directly. Therefore, a control signal can be dragged from a remote to a dimmer/controller only. A remote can control multiple dimmer/controllers. **Dimmers and Controllers are _circles_**.
+- **Remotes** are devices that can control dimmers/controllers. The remotes *do not* govern the fixtures directly. Therefore, a control signal can be dragged from a remote to a dimmer/controller only. A remote can control multiple dimmer/controllers. **Remotes are _circles_**.
 
 
 ### Selecting & Info Window
