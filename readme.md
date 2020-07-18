@@ -1,10 +1,10 @@
-# Lutron Caséta Layout Tool (For Lutron ALT Ex Project)
+# Lutron Caséta Layout Tool (Bright Ideas Electrical™)
 
 **The interactive tool is web-based and accessible at [cobrian59.github.io](https://cobrian59.github.io).**
 
 ### Purpose
 
-This interactive tool is designed to be a lightweight and simple means for laying out a potential Lutron Caseta home setup. The purpose is twofold; this can be used by members of the electrical contractor firm to quickly "sketch" options for the consumer, or it can be used by the consumer to help them determine their own custom setup that fits their needs best.
+This interactive tool is designed to be a lightweight and simple means for laying out a potential Lutron Caséta home setup. The purpose is twofold; this can be used by members of the electrical contractor firm to quickly "sketch" options for the consumer, or it can be used by the consumer to help them determine their own custom setup that fits their needs best.
 
 
 ## Instructions
@@ -43,6 +43,7 @@ This price is given as a _range_ as there is variances in pricing of some Lutron
 
 - Caséta kit discounts
 - Labor time
+- Cost of lighting fixtures
 - Cost of new-construction electrical equipment (wall boxes, wiring, breakers, etc.)
 
 

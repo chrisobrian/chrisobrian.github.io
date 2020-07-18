@@ -60,31 +60,9 @@ function selectFixt(id, loc=null) {
     selected = d3.select("svg #" + id);
     selected.classed('selected', true);
     // selected.classed('move', false);
-
     
-    // if (loc !== null) {
-    //     //selectedFixtDiv.style.display = 'block';
-    //     selectedFixtDiv.style.bottom = (svgH-loc[1] + 8) + 'px';
-
-    //     if (loc[0] < 580) {
-    //         selectedFixtDiv.style.left = (loc[0] + 8) + 'px';
-    //         selectedFixtDiv.style.right = 'initial';
-    //     }
-    //     else {
-    //         selectedFixtDiv.style.right = (svgW - (loc[0] - 8)) + 'px';
-    //         selectedFixtDiv.style.left = 'initial';
-    //     }
-
-
-    //     if (loc[1] < 250) {
-    //         selectedFixtDiv.style.top = (loc[1] + 8) + 'px';
-    //         selectedFixtDiv.style.bottom = 'initial';
-    //     }
-    //     else {
-    //         selectedFixtDiv.style.bottom = (svgH-loc[1] + 8) + 'px';
-    //         selectedFixtDiv.style.top = 'initial';
-    //     }
-    // }
+    // Populate info window with necessary info:
+    loadDeviceDetails();
 }
 
 /** Deselects selected fixture and saves info: */
@@ -299,7 +277,6 @@ function onKeyStroke(code) {
             }
 
             // Populate content with correct info & show!
-            loadDeviceDetails();
             selectedFixtDiv.style.display = 'block';
         }
     }
