@@ -32,8 +32,16 @@ prices = {
     'pico-scene-2-but'      : [56, 56],
     'pico-scene-4-but'      : [56, 56],
 
-    'occupancy-sensor'      : [68, 68],
-    'thermostat'            : [355, 355]
+    'pico-occupancy-sensor' : [68, 68],
+    'thermostat'            : [355, 355],
+
+    // Includes:
+    'none'                  : [0, 0],
+    'acc-wallplate'         : [8.6, 8.6],
+    'acc-carclip'           : [9, 9],
+    'acc-pedestal-1'        : [15, 25],
+    'acc-pedestal-2'        : [30, 40],
+    'acc-pedestal-3'        : [100, 100]
 };
 
 
@@ -51,7 +59,7 @@ function selectFixt(id, loc=null) {
 
     selected = d3.select("svg #" + id);
     selected.classed('selected', true);
-    selected.classed('move', false);
+    // selected.classed('move', false);
 
     
     // if (loc !== null) {
@@ -209,24 +217,24 @@ function onKeyStroke(code) {
 
     if (selected === null) return;
 
-    newFixtDiv.style.display = 'none';
+    //newFixtDiv.style.display = 'none';
     selectedFixtDiv.style.display = 'none';
     
     // Arrow keys for movement:
     if (code == 37) {
-        selected.classed('move', true);
+        // selected.classed('move', true);
         selected.attr('x', Number(selected.attr('x')) - 1 );
     }
     else if (code == 39) {
-        selected.classed('move', true);
+        // selected.classed('move', true);
         selected.attr('x', Number(selected.attr('x')) + 1 );
     }
     else if (code == 38) {
-        selected.classed('move', true);
+        // selected.classed('move', true);
         selected.attr('y', Number(selected.attr('y')) - 1 );
     }
     else if (code == 40) {
-        selected.classed('move', true);
+        // selected.classed('move', true);
         selected.attr('y', Number(selected.attr('y')) + 1 );
     }
 
@@ -266,8 +274,9 @@ function onKeyStroke(code) {
         }
         else {
 
+            // Need to relocate info window
+            
             let loc = [Number(selected.attr('x')), Number(selected.attr('y'))];
-
             selectedFixtDiv.style.bottom = (svgH-loc[1] + 8) + 'px';
 
             if (loc[0] < 580) {
@@ -289,6 +298,8 @@ function onKeyStroke(code) {
                 selectedFixtDiv.style.top = 'initial';
             }
 
+            // Populate content with correct info & show!
+            loadDeviceDetails();
             selectedFixtDiv.style.display = 'block';
         }
     }
@@ -505,6 +516,12 @@ function onLutronMouseout() {
 /** populates device details window when selected  */
 function loadDeviceDetails() {
     // ....
+
+    // Update basic info in fixture data object:
+    let nameInp = document.getElementById('device-name');
+    nameInp.value = fixtures[selected.attr('id')].name;
+
+
 }
 
 /** Executed on submit of "selected fixture" form */
@@ -512,20 +529,37 @@ function saveDeviceDetails(e) {
     e = e || window.event;
     e.preventDefault();
 
+    
+    
+    
+    // Update device shape:
+
+    
+    
+    // Remove old device pricing from estimate
     minPrice -= fixtures[selected.attr('id')].price[0];
     maxPrice -= fixtures[selected.attr('id')].price[1];
 
+    // Device Pricing
     let select = document.getElementById('device-input');
     let newPrice = prices[select.options[select.selectedIndex].value];
 
-    console.log(newPrice);
+    // Includes Pricing
+    let selectInc = document.getElementById('includes-input');
+    let includePrice = prices[selectInc.options[selectInc.selectedIndex].value];
 
-    fixtures[selected.attr('id')].price = newPrice;
-
-    minPrice += newPrice[0];
-    maxPrice += newPrice[1];
-
+    // Update estimate with new pricing:
+    fixtures[selected.attr('id')].price = [
+        newPrice[0] + includePrice[0],
+        newPrice[1] + includePrice[1]
+    ];
+    minPrice += fixtures[selected.attr('id')].price[0];
+    maxPrice += fixtures[selected.attr('id')].price[1];
     updatePriceEst();
+
+    // Update other basic info in fixture data object:
+    let nameInp = document.getElementById('device-name');
+    fixtures[selected.attr('id')].name = nameInp.value;
 
     deselectFixt();
 }

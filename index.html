@@ -29,9 +29,9 @@
             <div id="selected-fixture-window">
                 <h2>Lutron Device</h2>
                 <form id="selected-fixture-form">
-                    <label for="fixt-name">
+                    <label for="device-name">
                         <span>Name:</span>
-                        <input id="fixt-name" name="fixt-name" type="text"> 
+                        <input id="device-name" name="device-name" type="text"> 
                     </label>
 
                     <label for="device-input">
@@ -46,29 +46,32 @@
                                 <option value="switch-pro">Switch <strong>Pro</strong></option>
                                 <option value="lamp-dimmer">Lamp Dimmer (Plug-In)</option>
                             </optgroup>
-                            <optgroup label="Pico Remote Controls">
+                            <optgroup label="Remote Controls">
                                 <option value="pico-remote">Std Pico Remote</option>
                                 <option value="pico-remote-2-but">2-Button Pico Remote</option>
                                 <option value="pico-remote-4-but">4-Button Pico Remote</option>
                                 <option value="pico-remote-fan">Pico Fan Speed Remote</option>
                                 <option value="pico-remote-audio">Pico Audio Remote</option>
-                            </optgroup>
-                            <optgroup label="Pico Scene Keypads">
                                 <option value="pico-scene-2-but">2-Button Pico Scene Keypad</option>
                                 <option value="pico-scene-4-but">4-Button Pico Scene Keypad</option>
+                                <option value="pico-occupancy-sensor">Wireless Occupancy Sensor</option>
                             </optgroup>
-                            <optgroup label="Additional">
-                                <option value="occupancy-sensor">Wireless Occupancy Sensor</option>
+                            <optgroup label="Misc">
                                 <option value="thermostat">Honeywell Wireless Thermostat</option>
                             </optgroup>
                         </select> 
                     </label>
 
                     <label for="includes-input">
-                        <span>Include:</span>
+                        <span>Accessories:</span>
                         <select name="includes-input" id="includes-input">
                             <option value="none">None</option>
-                        </select> 
+                            <option value="acc-wallplate">Wallplate Bracket</option>
+                            <option value="acc-carclip">Car Visor Clip</option>
+                            <option value="acc-pedestal-1">Single Pedestal</option>
+                            <option value="acc-pedestal-2">Double Pedestal</option>
+                            <option value="acc-pedestal-3">Triple Pedestal</option>
+                        </select>
                     </label>
     
                     <label for="submit">
