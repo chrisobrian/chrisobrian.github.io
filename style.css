@@ -1,0 +1,240 @@
+/* ---------------------------------------------------------
+ *  styles.css written by Chris O'Brian
+ *  Last updated 7/8/20
+ * --------------------------------------------------------- 
+ */
+
+/************************************/
+/* Variable Declarations            */
+/************************************/
+
+
+
+
+/************************************/
+/* General Styling                  */
+/************************************/
+
+
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+h2 {
+    margin: 0;
+}
+
+p.small {
+    margin-top: 40px;
+    font-size: 0.8em;
+}
+
+.hidden {
+    display: none;
+}
+
+/************************************/
+/* Header & Footer Styles           */
+/************************************/
+
+header {
+    background: #0099d7;
+    padding: 20px;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    text-align: center;
+    font-size: 36pt;
+    font-weight: 200;
+    margin: 0;
+    color: white;
+}
+
+footer {
+    background: #0099d7;
+    padding: 20px;
+    margin-top: 40px;
+    clear: both;
+}
+
+footer p {
+    text-align: center;
+    font-size: 16pt;
+    font-style: italic;
+    font-weight: 400;
+    color: white;
+    letter-spacing: 0.5px;
+}
+
+
+/************************************/
+/* Main Body                        */
+/************************************/
+
+.body-container {
+    padding: 0;
+    width: 80%;
+    margin: 0 auto;
+}
+
+#svg-container {
+    width: 903px;
+    height: 694px;
+    padding: 0;
+    position: relative;
+    margin: 0 auto;
+}
+
+#new-fixture-window, #selected-fixture-window {
+    z-index: 999;
+    width: 350px;
+    display: none;
+    position: absolute;
+    padding: 30px;
+    background: 20px;
+    border-radius: 4px;
+    border: 1px solid black;
+    box-shadow: 2px 2px 5px black;
+    background: white;
+    font-size: 12pt;
+}
+
+#selected-fixture-window h2 {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+#selected-fixture-form{
+    width: 100%;
+}
+
+#selected-fixture-form label {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#selected-fixture-form label > * {
+    display: block;
+    width: 40%;
+}
+
+#selected-fixture-form label:last-of-type {
+    margin-top: 40px;
+}
+
+#selected-fixture-form input[type='submit'] {
+    width: 30% !important;
+    margin: 0;
+    padding: 10px;
+    margin-left: auto;
+    border-radius: 2px;
+    font-size: 12pt;
+    background: #0099d7;
+    color: white;
+    border: none;
+}
+
+#selected-fixture-form input[type='submit']:hover, 
+#selected-fixture-form input[type='submit']:focus {
+    opacity: 0.9;
+}
+
+#selected-fixture-form input[type='submit']:active{
+    filter: brightness(0.9);
+    box-shadow: 1px 1px 3px inset black;
+}
+
+.sr-only {
+    position: absolute !important;
+    max-height: 1px; 
+    max-width: 1px;
+    overflow: hidden;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px, 1px, 1px, 1px);
+    text-indent: -5000px;
+}
+
+#price-est {
+    margin-bottom: 20px;
+}
+
+#price-est p {
+    text-align: center;
+    font-size: 18pt;
+}
+
+/************************************/
+/* SVG Elements                     */
+/************************************/
+
+svg#main {
+    display: block;
+    background-image: url('images/background-clear.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+svg#main g {
+    pointer-events: all;
+}
+
+svg circle, svg path.lamp, svg rect {
+    fill: rgb(154, 196, 94);
+}
+
+svg circle.controlled, svg path.lamp.controlled, 
+svg rect.controlled, g.controlled {
+    stroke-width: 2px;
+    stroke: blue !important;
+}
+
+svg line.wire.controlled, svg .controlled line.wire {
+    stroke: blue !important; 
+    opacity: 0.6;
+}
+
+svg line.wire {
+    stroke-width: 2px;
+    stroke: orangered;
+    fill: none;
+}
+
+svg #lutron > circle.init, svg #lutron > rect.init, 
+svg #lutron > path.init {
+    fill: grey !important;
+}
+
+svg #lutron > circle, svg #lutron > rect, 
+svg #lutron > path {
+    fill: #0099d7;
+    stroke-width: 1px;
+    stroke: black;
+}
+
+svg #lutron > circle.selected, svg #lutron > rect.selected, 
+svg #lutron > path.selected {
+    fill: gold !important;
+    stroke: none !important;
+}
+
+svg #lutron > circle.selected.move, svg #lutron > rect.selected.move, 
+svg #lutron > path.selected.move {
+    fill: lightcoral !important;
+}
+
+svg line#dragline, svg line.dragline {
+    stroke-width: 5px;
+    stroke: #0099d7;
+    stroke-dasharray: 8 2;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+svg line.dragline {
+    opacity: 0.4 !important;
+    stroke-dasharray: 8 5 !important;
+}

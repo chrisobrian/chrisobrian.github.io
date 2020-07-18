@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Chris O'Brian">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="style.css" media="all" />
+
+    <script src="d3_min_v5.js"></script>
+    <script src="main.js"></script>
+
+    <title>Caseta Layout Tool</title>
+</head>
+
+<body>
+    <header>
+        <h1>Caseta Layout Tool</h1>
+    </header>
+
+    <div id="main-content" class="body-container">
+        <div id="price-est">
+            <p>
+                Price Range Estimate: $<span id="price-est-min">0</span> - $<span id="price-est-max">0</span>
+            </p>
+        </div>
+        <div id="svg-container">
+            <div id="selected-fixture-window">
+                <h2>Lutron Device</h2>
+                <form id="selected-fixture-form">
+                    <label for="fixt-name">
+                        <span>Name:</span>
+                        <input id="fixt-name" name="fixt-name" type="text"> 
+                    </label>
+
+                    <label for="device-input">
+                        <span>Select Device Type:</span>
+                        <select name="device-input" id="device-input">
+                            <optgroup label="Dimmers & Switches">
+                                <option value="dimmer">Std Dimmer</option>
+                                <option value="dimmer-pro">Dimmer <strong>Pro</strong></option>
+                                <option value="dimmer-elv">Dimmer <strong>ELV+</strong></option>
+                                <option value="fan-speed-controller">Fan Speed Controller</option>
+                                <option value="neutral-switch">Neutral Switch</option>
+                                <option value="switch-pro">Switch <strong>Pro</strong></option>
+                                <option value="lamp-dimmer">Lamp Dimmer (Plug-In)</option>
+                            </optgroup>
+                            <optgroup label="Pico Remote Controls">
+                                <option value="pico-remote">Std Pico Remote</option>
+                                <option value="pico-remote-2-but">2-Button Pico Remote</option>
+                                <option value="pico-remote-4-but">4-Button Pico Remote</option>
+                                <option value="pico-remote-fan">Pico Fan Speed Remote</option>
+                                <option value="pico-remote-audio">Pico Audio Remote</option>
+                            </optgroup>
+                            <optgroup label="Pico Scene Keypads">
+                                <option value="pico-scene-2-but">2-Button Pico Scene Keypad</option>
+                                <option value="pico-scene-4-but">4-Button Pico Scene Keypad</option>
+                            </optgroup>
+                            <optgroup label="Additional">
+                                <option value="occupancy-sensor">Wireless Occupancy Sensor</option>
+                                <option value="thermostat">Honeywell Wireless Thermostat</option>
+                            </optgroup>
+                        </select> 
+                    </label>
+
+                    <label for="includes-input">
+                        <span>Include:</span>
+                        <select name="includes-input" id="includes-input">
+                            <option value="none">None</option>
+                        </select> 
+                    </label>
+    
+                    <label for="submit">
+                        <span class="sr-only">Save:</span> 
+                        <input name="submit" type="submit" id="submit" value="Apply">
+                    </label>
+                </form>
+            </div>
+            <div id="new-fixture-window">
+                <h2>New Device</h2>
+                
+            </div>
+        <svg id="main" width="903" height="694">
+            <g id="fixtures">
+                <g id="c-1">
+                    <line class="wire" x1="287.5" y1="125" x2="361.5" y2="125"></line>
+                    <line class="wire" x1="361.5" y1="125" x2="361.5" y2="221"></line>
+                    <line class="wire" x1="361.5" y1="221" x2="286.5" y2="221"></line>
+                    <circle id="recessed-1" class="recessed" cx="361.5" cy="125" r="8"></circle>
+                    <circle id="recessed-2" class="recessed" cx="361.5" cy="221" r="8"></circle>
+                    <circle id="recessed-0" class="recessed" cx="287.5" cy="125" r="8"></circle>
+                    <circle id="recessed-3" class="recessed" cx="286.5" cy="221" r="8"></circle>
+                </g>
+                <g id="c-2">
+                    <line class="wire" x1="48.5" y1="199" x2="105.5" y2="200"></line>
+                    <line class="wire" x1="105.5" y1="200" x2="104.5" y2="280"></line>
+                    <line class="wire" x1="104.5" y1="280" x2="48.5" y2="280"></line>
+                    <circle id="recessed-4" class="recessed" cx="48.5" cy="199" r="8"></circle>
+                    <circle id="recessed-5" class="recessed" cx="105.5" cy="200" r="8"></circle>
+                    <circle id="recessed-6" class="recessed" cx="104.5" cy="280" r="8"></circle>
+                    <circle id="recessed-7" class="recessed" cx="48.5" cy="280" r="8"></circle>
+                </g>
+                <g id="c-3">
+                    <line class="wire" x1="433.8333435058594" y1="70.44999694824219" x2="433.8333435058594" y2="128.4499969482422"></line>
+                    <circle id="recessed-16" class="recessed" cx="433.8333435058594" cy="70.44999694824219" r="8"></circle>
+                    <circle id="recessed-17" class="recessed" cx="433.8333435058594" cy="128.4499969482422" r="8"></circle>
+                </g>
+                <g id="c-4">
+                    <line class="wire" x1="556.9166259765625" y1="63.03333282470703" x2="556.9166259765625" y2="136.03334045410156"></line>
+                    <circle id="outdoor-15" class="outdoor" cx="556.9166259765625" cy="63.03333282470703" r="4"></circle>
+                    <circle id="outdoor-16" class="outdoor" cx="556.9166259765625" cy="136.03334045410156" r="4"></circle>
+                </g>
+                <g id="c-5">
+                    <line class="wire" x1="634.9166259765625" y1="32.03333282470703" x2="686.9166259765625" y2="25.03333282470703"></line>
+                    <line class="wire" x1="686.9166259765625" y1="25.03333282470703" x2="740.9166259765625" y2="31.03333282470703"></line>
+                    <line class="wire" x1="740.9166259765625" y1="31.03333282470703" x2="783.9166259765625" y2="52.03333282470703"></line>
+                    <line class="wire" x1="783.9166259765625" y1="52.03333282470703" x2="872.9166259765625" y2="135.03334045410156"></line>
+                    <line class="wire" x1="872.9166259765625" y1="135.03334045410156" x2="881.9166259765625" y2="171.11666870117188"></line>
+                    <line class="wire" x1="881.9166259765625" y1="171.11666870117188" x2="701.9166259765625" y2="196.11666870117188"></line>
+                    <line class="wire" x1="701.9166259765625" y1="196.11666870117188" x2="658.9166259765625" y2="196.11666870117188"></line>
+                    <circle id="outdoor-17" class="outdoor" cx="634.9166259765625" cy="32.03333282470703" r="4"></circle>
+                    <circle id="outdoor-18" class="outdoor" cx="686.9166259765625" cy="25.03333282470703" r="4"></circle>
+                    <circle id="outdoor-19" class="outdoor" cx="740.9166259765625" cy="31.03333282470703" r="4"></circle>
+                    <circle id="outdoor-20" class="outdoor" cx="783.9166259765625" cy="52.03333282470703" r="4"></circle>
+                    <circle id="outdoor-21" class="outdoor" cx="872.9166259765625" cy="135.03334045410156" r="4"></circle>
+                    <circle id="outdoor-22" class="outdoor" cx="881.9166259765625" cy="171.11666870117188" r="4"></circle>
+                    <circle id="outdoor-23" class="outdoor" cx="701.9166259765625" cy="196.11666870117188" r="4"></circle>
+                    <circle id="outdoor-24" class="outdoor" cx="658.9166259765625" cy="196.11666870117188" r="4"></circle>
+                </g>
+                <g id="c-6">
+                    <line class="wire" x1="678.75" y1="276.70001220703125" x2="679" y2="328.3666687011719"></line>
+                    <circle id="recessed-15" class="recessed" cx="678.75" cy="276.70001220703125" r="8"></circle>
+                    <circle id="recessed-18" class="recessed" cx="679" cy="328.3666687011719" r="8"></circle>
+                </g>
+                <g id="c-7">
+                    <line class="wire" x1="680.25" y1="554.11669921875" x2="586.25" y2="554.11669921875"></line>
+                    <circle id="outdoor-13" class="outdoor" cx="586.25" cy="554.11669921875" r="4"></circle>
+                    <circle id="outdoor-14" class="outdoor" cx="680.25" cy="554.11669921875" r="4"></circle>
+                </g>
+                <g id="c-8">
+                    <line class="wire" x1="472.8333435058594" y1="459.7833251953125" x2="276.8333435058594" y2="459.7833251953125"></line>
+                    <circle id="outdoor-3" class="outdoor" cx="276.8333435058594" cy="459.7833251953125" r="4"></circle>
+                    <circle id="outdoor-4" class="outdoor" cx="472.8333435058594" cy="459.7833251953125" r="4"></circle>
+                </g>
+                <g id="c-9">
+                    <line class="wire" x1="412.8333435058594" y1="532.7000122070312" x2="408.8333435058594" y2="577.7000122070312"></line>
+                    <line class="wire" x1="408.8333435058594" y1="577.7000122070312" x2="387.8333435058594" y2="617.7000122070312"></line>
+                    <line class="wire" x1="387.8333435058594" y1="617.7000122070312" x2="348.8333435058594" y2="634.7000122070312"></line>
+                    <line class="wire" x1="348.8333435058594" y1="634.7000122070312" x2="297.8333435058594" y2="634.7000122070312"></line>
+                    <line class="wire" x1="297.8333435058594" y1="634.7000122070312" x2="297.8333435058594" y2="572.7000122070312"></line>
+                    <line class="wire" x1="297.8333435058594" y1="572.7000122070312" x2="339.8333435058594" y2="566.7000122070312"></line>
+                    <line class="wire" x1="339.8333435058594" y1="566.7000122070312" x2="344.8333435058594" y2="531.7000122070312"></line>
+                    <circle id="outdoor-5" class="outdoor" cx="412.8333435058594" cy="532.7000122070312" r="4"></circle>
+                    <circle id="outdoor-6" class="outdoor" cx="408.8333435058594" cy="577.7000122070312" r="4"></circle>
+                    <circle id="outdoor-7" class="outdoor" cx="387.8333435058594" cy="617.7000122070312" r="4"></circle>
+                    <circle id="outdoor-8" class="outdoor" cx="348.8333435058594" cy="634.7000122070312" r="4"></circle>
+                    <circle id="outdoor-9" class="outdoor" cx="297.8333435058594" cy="634.7000122070312" r="4"></circle>
+                    <circle id="outdoor-10" class="outdoor" cx="297.8333435058594" cy="572.7000122070312" r="4"></circle>
+                    <circle id="outdoor-11" class="outdoor" cx="339.8333435058594" cy="566.7000122070312" r="4"></circle>
+                    <circle id="outdoor-12" class="outdoor" cx="344.8333435058594" cy="531.7000122070312" r="4"></circle>
+                </g>
+                <g id="c-10">
+                    <line class="wire" x1="222" y1="556.9500122070312" x2="120" y2="556.9500122070312"></line>
+                    <line class="wire" x1="120" y1="556.9500122070312" x2="20" y2="556.9500122070312"></line>
+                    <circle id="outdoor-0" class="outdoor" cx="120" cy="556.9500122070312" r="4"></circle>
+                    <circle id="outdoor-1" class="outdoor" cx="20" cy="556.9500122070312" r="4"></circle>
+                    <circle id="outdoor-2" class="outdoor" cx="222" cy="556.9500122070312" r="4"></circle>
+                </g>
+                <g id="c-11">
+                    <line class="wire" x1="282.08331298828125" y1="415.6166687011719" x2="282.08331298828125" y2="366.6166687011719"></line>
+                    <circle id="recessed-26" class="recessed" cx="282.08331298828125" cy="366.6166687011719" r="8"></circle>
+                    <circle id="recessed-27" class="recessed" cx="282.08331298828125" cy="415.6166687011719" r="8"></circle>
+                </g>
+                <g id="c-12">
+                    <line class="wire" x1="467.08331298828125" y1="356.6166687011719" x2="466.08331298828125" y2="383.6166687011719"></line>
+                    <line class="wire" x1="466.08331298828125" y1="383.6166687011719" x2="466.08331298828125" y2="412.6166687011719"></line>
+                    <circle id="recessed-21" class="recessed" cx="466.08331298828125" cy="412.6166687011719" r="8"></circle>
+                    <circle id="recessed-22" class="recessed" cx="466.08331298828125" cy="383.6166687011719" r="8"></circle>
+                    <circle id="recessed-23" class="recessed" cx="467.08331298828125" cy="356.6166687011719" r="8"></circle>
+                </g>
+
+                <g id="c-13">
+                    <line class="wire" x1="464.75" y1="300.70001220703125" x2="374.75" y2="301.70001220703125"></line>
+                    <line class="wire" x1="374.75" y1="301.70001220703125" x2="281.75" y2="300.70001220703125"></line>
+                    <line class="wire" x1="281.75" y1="300.70001220703125" x2="184.75" y2="300.70001220703125"></line>
+                    <circle id="recessed-9" class="recessed" cx="374.75" cy="301.70001220703125" r="8"></circle>
+                    <circle id="recessed-10" class="recessed" cx="464.75" cy="300.70001220703125" r="8"></circle>
+                    <circle id="recessed-11" class="recessed" cx="281.75" cy="300.70001220703125" r="8"></circle>
+                    <circle id="recessed-12" class="recessed" cx="184.75" cy="300.70001220703125" r="8"></circle>
+                </g>
+                <g id="c-14">
+                    <line class="wire" x1="110" y1="396" x2="140" y2="396"></line>
+                    <line class="wire" x1="195" y1="395" x2="195" y2="470"></line>
+                    <line class="wire" x1="110" y1="465" x2="140" y2="465"></line>
+                    <rect id="flour-0" class="flour" x="43" y="391" width="70" height="10"></rect>
+                    <rect id="flour-1" class="flour" x="137" y="391" width="70" height="10"></rect>
+                    <rect id="flour-2" class="flour" x="44" y="460" width="70" height="10"></rect>
+                    <rect id="flour-3" class="flour" x="137" y="460" width="70" height="10"></rect>
+                </g>
+
+                <circle id="recessed-8" class="recessed" cx="184.5" cy="210" r="8"></circle>
+                <circle id="recessed-13" class="recessed" cx="573.75" cy="247.6999969482422" r="8"></circle>
+                <circle id="recessed-14" class="recessed" cx="466.75" cy="209.6999969482422" r="8"></circle>
+                <circle id="recessed-19" class="recessed" cx="604" cy="373.3666687011719" r="8"></circle>
+                <circle id="recessed-20" class="recessed" cx="549" cy="373.3666687011719" r="8"></circle>
+                <circle id="recessed-24" class="recessed" cx="428.08331298828125" cy="383.6166687011719" r="8"></circle>
+                <circle id="recessed-25" class="recessed" cx="374.08331298828125" cy="383.6166687011719" r="8"></circle>
+                <circle id="recessed-28" class="recessed" cx="567.9166259765625" cy="409.2833251953125" r="8"></circle>
+                <circle id="recessed-29" class="recessed" cx="570.9166259765625" cy="482.2833251953125" r="8"></circle>
+                <circle id="recessed-30" class="recessed" cx="678.9166259765625" cy="463.2833251953125" r="8"></circle>
+            
+                <path id="lamps-0" class="lamp" d="M 311.3333435058594 79.61666870117188 L 333.3333435058594 79.61666870117188 L 322.3333435058594 69.61666870117188 L 311.3333435058594 79.61666870117188 z"></path>
+                <path id="lamps-1" class="lamp" d="M 17 160.61666870117188 L 39 160.61666870117188 L 28 150.61666870117188 L 17 160.61666870117188 z"></path>
+                <path id="lamps-2" class="lamp" d="M 235 271.2833251953125 L 257 271.2833251953125 L 246 261.2833251953125 L 235 271.2833251953125 z"></path>
+                <path id="lamps-3" class="lamp" d="M 493.33331298828125 271.2833251953125 L 515.3333129882812 271.2833251953125 L 504.33331298828125 261.2833251953125 L 493.33331298828125 271.2833251953125 z"></path>
+                <path id="lamps-4" class="lamp" d="M 493.33331298828125 159.2833251953125 L 515.3333129882812 159.2833251953125 L 504.33331298828125 149.2833251953125 L 493.33331298828125 159.2833251953125 z"></path>
+                <path id="lamps-5" class="lamp" d="M 709.6666259765625 230.9499969482422 L 731.6666259765625 230.9499969482422 L 720.6666259765625 220.9499969482422 L 709.6666259765625 230.9499969482422 z"></path>
+                <path id="lamps-6" class="lamp" d="M 709.6666259765625 398.95001220703125 L 731.6666259765625 398.95001220703125 L 720.6666259765625 388.95001220703125 L 709.6666259765625 398.95001220703125 z"></path>
+                <path id="lamps-7" class="lamp" d="M 710.6666259765625 535.9500122070312 L 732.6666259765625 535.9500122070312 L 721.6666259765625 525.9500122070312 L 710.6666259765625 535.9500122070312 z"></path>
+                <path id="lamps-8" class="lamp" d="M 524.6666259765625 535.9500122070312 L 546.6666259765625 535.9500122070312 L 535.6666259765625 525.9500122070312 L 524.6666259765625 535.9500122070312 z"></path>
+
+                <rect id="flour-4" class="flour" x="509" y="362.95001220703125" width="9" height="83"></rect>
+                <rect id="flour-5" class="flour" x="217.6666717529297" y="210" width="9" height="67"></rect>
+            </g>
+            <g id="lutron"></g>
+        </svg>
+        </div>
+    </div>
+
+    <footer>
+        <p>Developed by Chris O'Brian</p>
+    </footer>
+    <script>onPageLoad();</script>
+</body>
+</html>
