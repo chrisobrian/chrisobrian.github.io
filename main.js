@@ -11,7 +11,7 @@ var selected = null;
 var fixtures = {};
 
 /************************************/
-/* Pricing Information              */
+/* Pricing & Device Information     */
 /************************************/
 
 prices = {
@@ -44,8 +44,18 @@ prices = {
     'acc-pedestal-3'        : [100, 100]
 };
 
-
-
+function newDevice(id, location) {
+    return {
+        'id'        : id,
+        'name'      : '',
+        'type'      : 'dimmer',
+        'acc'       : 'none',
+        'shape'     : 'rect',
+        'loc'       : location,
+        'price'     : [0,0],
+        'controls'  : []
+    };
+}
 
 /************************************/
 /* Main Functions                   */
@@ -144,15 +154,7 @@ function onPageLoad() {
                 });
 
             // Create data object:
-            fixtures[newId] = {
-                    'id'        : newId,
-                    'name'      : '',
-                    'type'      : '',
-                    'shape'     : 'square',
-                    'loc'       : loc,
-                    'price'     : [0,0],
-                    'controls'  : []
-                };
+            fixtures[newId] = newDevice(newId, loc);
             
             // Select new fixture & show "new fixture" dialog:
             selectFixt(newId, loc);
@@ -195,25 +197,33 @@ function onKeyStroke(code) {
 
     if (selected === null) return;
 
-    //newFixtDiv.style.display = 'none';
     selectedFixtDiv.style.display = 'none';
     
     // Arrow keys for movement:
     if (code == 37) {
-        // selected.classed('move', true);
-        selected.attr('x', Number(selected.attr('x')) - 1 );
+        if (selected.node().tagName == 'rect')
+            selected.attr('x', Number(selected.attr('x')) - 1 );
+        else
+            selected.attr('cx', Number(selected.attr('cx')) - 1 );
     }
     else if (code == 39) {
         // selected.classed('move', true);
-        selected.attr('x', Number(selected.attr('x')) + 1 );
+        if (selected.node().tagName == 'rect')
+            selected.attr('x', Number(selected.attr('x')) + 1 );
+        else
+            selected.attr('cx', Number(selected.attr('cx')) + 1 );
     }
     else if (code == 38) {
-        // selected.classed('move', true);
-        selected.attr('y', Number(selected.attr('y')) - 1 );
+        if (selected.node().tagName == 'rect')
+            selected.attr('y', Number(selected.attr('y')) - 1 );
+        else
+            selected.attr('cy', Number(selected.attr('cy')) - 1 );
     }
     else if (code == 40) {
-        // selected.classed('move', true);
-        selected.attr('y', Number(selected.attr('y')) + 1 );
+        if (selected.node().tagName == 'rect')
+            selected.attr('y', Number(selected.attr('y')) + 1 );
+        else
+            selected.attr('cy', Number(selected.attr('cy')) + 1 );
     }
 
     else if (code == 8 && document.activeElement.tagName == 'BODY') {
@@ -254,9 +264,12 @@ function onKeyStroke(code) {
 
             // Need to relocate info window
             
-            let loc = [Number(selected.attr('x')), Number(selected.attr('y'))];
-            selectedFixtDiv.style.bottom = (svgH-loc[1] + 8) + 'px';
+            let loc = [
+                Number(selected.attr('x') || selected.attr('cx')), 
+                Number(selected.attr('y') || selected.attr('cy'))
+            ];
 
+            selectedFixtDiv.style.bottom = (svgH-loc[1] + 8) + 'px';
             if (loc[0] < 580) {
                 selectedFixtDiv.style.left = (loc[0] + 8) + 'px';
                 selectedFixtDiv.style.right = 'initial';
@@ -324,7 +337,7 @@ function moveDragline() {
         .attr('y2', loc[1]);
 }
 
-/** Hover event when "dragging" a dragline over a circuit or fixture */
+/** Hover event when "dragging" a dragline over a circuit, fixture or device: */
 function onDraglineMouseover() {
 
     // If no dragline is present:
@@ -334,13 +347,24 @@ function onDraglineMouseover() {
     circuitHover = this;
     // t.classed('dragline-hover', true);
 
-    d3.selectAll("svg #fixtures > *")
+    if (selected.classed('remote') && t.classed('lutron')) {
+        // Hovering over a lutron device; only highlight if dragging from remote!
+        d3.selectAll("svg #lutron > *")
         .attr("opacity", 0.5);
 
-    if (this.parentElement.id != 'fixtures')
-        d3.select(this.parentElement).attr('opacity', 1);
-    else 
-        d3.select(this).attr('opacity', 1);
+        selected.attr('opacity', 1);
+        t.attr('opacity', 1);
+    }
+    else if (!selected.classed('remote') && !t.classed('lutron')){
+        // Otherwise, hovering over a fixture while a controller
+        d3.selectAll("svg #fixtures > *")
+        .attr("opacity", 0.5);
+
+        if (this.parentElement.id != 'fixtures')
+            d3.select(this.parentElement).attr('opacity', 1);
+        else 
+            t.attr('opacity', 1);
+    }
 }
 
 function onDraglineMousemove() {
@@ -436,42 +460,44 @@ function onLutronMouseover() {
         .attr('opacity', 0.2);
 
     let device = d3.select(this);
+    let srcbox = device.node().getBBox();
+
     let lines = svg.append('g')
         .attr('id', 'hoverlines');
 
     device.attr('opacity', 1);
 
     fixtures[this.id].controls.forEach( e => {
+
         let tgt = d3.select('#' + e);
         tgt.attr('opacity', 1);
 
         if (tgt.node().tagName == 'g') {
-            //console.log('firing');
-
-            console.log(svg.selectAll('#' + e + ' *'));
+            // This is a circuit!
             
-            svg.selectAll('#' + e + ' *')._groups.forEach( f => {
+            svg.selectAll('#' + e + ' circle, #' + e + ' rect').each( function() {
+                let tgtbox = this.getBBox();
 
                 lines.append('line')
-                    .attr('x1', Number(device.attr('x')) + 8)
-                    .attr('x2', Number(d3.select('#' + f.id).attr('cx')))
-                    .attr('y1', Number(device.attr('y')) + 8)
-                    .attr('y2', Number(d3.select('#' + f.id).attr('cy')))
+                    .attr('x1', srcbox.x + srcbox.width / 2)
+                    .attr('x2', tgtbox.x + tgtbox.width / 2)
+                    .attr('y1', srcbox.y + srcbox.height / 2)
+                    .attr('y2', tgtbox.y + tgtbox.height / 2)
                     .attr('class', 'dragline');
-
             });
         }
-        else 
-            lines.append('line')
-                .attr('x1', Number(device.attr('x')) + 8)
-                .attr('x2', Number(tgt.attr('cx')))
-                .attr('y1', Number(device.attr('y')) + 8)
-                .attr('y2', Number(tgt.attr('cy')))
-                .attr('class', 'dragline');
+        else {
+            // This is a standalone fixture.
+            let tgtbox = tgt.node().getBBox();
 
+            lines.append('line')
+                .attr('x1', srcbox.x + srcbox.width / 2)
+                .attr('x2', tgtbox.x + tgtbox.width / 2)
+                .attr('y1', srcbox.y + srcbox.height / 2)
+                .attr('y2', tgtbox.y + tgtbox.height / 2)
+                .attr('class', 'dragline');
+            }
     });
-    
-    
 }
 
 
@@ -498,7 +524,11 @@ function loadDeviceDetails() {
     let nameInp = document.getElementById('device-name');
     nameInp.value = fixtures[selected.attr('id')].name;
 
+    let select = document.getElementById('device-input');
+    select.value = fixtures[selected.attr('id')].type;
 
+    let selectInc = document.getElementById('includes-input');
+    selectInc.value = fixtures[selected.attr('id')].acc;
 }
 
 /** Executed on submit of "selected fixture" form */
@@ -506,24 +536,23 @@ function saveDeviceDetails(e) {
     e = e || window.event;
     e.preventDefault();
 
-    
-    
-    
-    // Update device shape:
-
-    
+    // Update name info in fixture data object:
+    let nameInp = document.getElementById('device-name');
+    fixtures[selected.attr('id')].name = nameInp.value;
     
     // Remove old device pricing from estimate
     minPrice -= fixtures[selected.attr('id')].price[0];
     maxPrice -= fixtures[selected.attr('id')].price[1];
 
-    // Device Pricing
+    // Device Type & Pricing
     let select = document.getElementById('device-input');
     let newPrice = prices[select.options[select.selectedIndex].value];
+    fixtures[selected.attr('id')].type = select.options[select.selectedIndex].value;
 
-    // Includes Pricing
+    // Includes Type & Pricing
     let selectInc = document.getElementById('includes-input');
     let includePrice = prices[selectInc.options[selectInc.selectedIndex].value];
+    fixtures[selected.attr('id')].acc = selectInc.options[selectInc.selectedIndex].value;
 
     // Update estimate with new pricing:
     fixtures[selected.attr('id')].price = [
@@ -534,9 +563,73 @@ function saveDeviceDetails(e) {
     maxPrice += fixtures[selected.attr('id')].price[1];
     updatePriceEst();
 
-    // Update other basic info in fixture data object:
-    let nameInp = document.getElementById('device-name');
-    fixtures[selected.attr('id')].name = nameInp.value;
+    // Update device shape:
+    let isRemote = /^pico-/.test(select.options[select.selectedIndex].value);
+    if (isRemote && selected.node().tagNmae != 'circle') {
+        // Need to make a circle!
+        let next = acc.append('circle')
+            .attr('id', selected.attr('id'))
+            .attr('class', selected.attr('class') + ' remote')
+            .attr('cx', Number(selected.attr('x')) + 8)
+            .attr('cy', Number(selected.attr('y')) + 8)
+            .attr('r', 8)
+            .attr('draggable', 'true')
+            .on('click', fixtureClick)
+            .on('mouseover', onLutronMouseover)
+            .on('mouseout', onLutronMouseout)
+            .on('mousedown', beginDragline)
+            .on('mousemove', moveDragline)
+            .on('mouseup', function() {
+
+                // If user releases mouse on lutron device,
+                // don't change anything.
+                d3.selectAll("svg #fixtures > *")
+                    .attr("opacity", 1);
+
+                if (dragline !== null) {
+                    dragline.remove();
+                    dragline = null;
+                }
+            });
+
+        fixtures[selected.attr('id')].shape = 'circle';
+
+        selected.remove();
+        selected = next;
+    }
+    else if (!isRemote && selected.node().tagName != 'rect') {
+        // Need to make a rect!
+        let next = acc.append('rect')
+            .attr('id', selected.attr('id'))
+            .attr('class', selected.attr('class'))
+            .attr('x', Number(selected.attr('cx')) + 4)
+            .attr('y', Number(selected.attr('cy')) + 4)
+            .attr('width', 16)
+            .attr('height', 16)
+            .attr('draggable', 'true')
+            .on('click', fixtureClick)
+            .on('mouseover', onLutronMouseover)
+            .on('mouseout', onLutronMouseout)
+            .on('mousedown', beginDragline)
+            .on('mousemove', moveDragline)
+            .on('mouseup', function() {
+
+                // If user releases mouse on lutron device,
+                // don't change anything.
+                d3.selectAll("svg #fixtures > *")
+                    .attr("opacity", 1);
+
+                if (dragline !== null) {
+                    dragline.remove();
+                    dragline = null;
+                }
+            });
+
+        fixtures[selected.attr('id')].shape = 'rect';
+
+        selected.remove();
+        selected = next;
+    }
 
     deselectFixt();
 }
