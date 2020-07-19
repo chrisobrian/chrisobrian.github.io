@@ -408,16 +408,20 @@ function endDragline() {
         // This means fixture is in a circuit (or is a circuit)
         let p = this.parentElement;
 
-        if (d3.select(p).classed('controlled')) 
+        if (d3.select(p).classed('controlled')) {
             alert("There is already a Lutron device controlling this circuit!");
+            return;
+        }
 
         fixtures[selected.attr('id')].controls.push(p.id);
         d3.select(p).classed('controlled', true);
     }
     else {
         // Fixture is standalone.
-        if (d3.select(this).classed('controlled')) 
-            alert("There is already a Lutron device controlling this circuit!");
+        if (d3.select(this).classed('controlled')) {
+            alert("There is already a Lutron device controlling this fixture!");
+            return;
+        }
 
         fixtures[selected.attr('id')].controls.push(this.id);
         d3.select(this).classed('controlled', true);
