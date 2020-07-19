@@ -1,4 +1,4 @@
-# Lutron Caséta Layout Tool (Bright Ideas Electrical™)
+# Lutron Caséta Layout Tool (Bright Ideas Electrical)
 
 **The interactive tool is web-based and accessible at [cobrian59.github.io](https://cobrian59.github.io).**
 
