@@ -141,14 +141,7 @@ function onPageLoad() {
                 .on('mouseout', onLutronMouseout)
                 .on('mousedown', beginDragline)
                 .on('mousemove', moveDragline)
-                .on('mouseup', function() {
-
-                    d3.selectAll("svg #fixtures > *")
-                        .attr("opacity", 1);
-
-                    // If dragging from remote:
-                    endDragline(this);
-                });
+                .on('mouseup', onControllerMouseup);
 
             // Create data object:
             fixtures[newId] = newDevice(newId, loc);
@@ -180,11 +173,14 @@ function onPageLoad() {
         .on("mouseout", onDraglineMouseout)
         .on("mouseup", endDragline);
 
-
     // Add regular event listeners:
     document.getElementById('selected-fixture-form').addEventListener('submit', saveDeviceDetails);
     document.getElementById('save-button').addEventListener('click', saveSketchFile);
-    document.getElementById('load-button').addEventListener('click', loadSketchFile);
+    document.getElementById('load-button').addEventListener('click', function() {
+        let input = document.getElementById('load-input');
+        input.click();
+    });
+    document.getElementById('load-input').addEventListener('change', loadSketchFile);
 }
 
 
@@ -468,7 +464,7 @@ function fixtureClick(id=null) {
 
 
 /** Hover handler for lutron devices */
-function onLutronMouseover(el=null) {
+function onLutronMouseover(el) {
 
     el = el || this;
     
@@ -483,6 +479,8 @@ function onLutronMouseover(el=null) {
 
     device.attr('opacity', 1);
 
+    console.log(fixtures[el.id].controls);
+
     fixtures[el.id].controls.forEach( e => {
 
         let tgt = d3.select('#' + e);
@@ -492,7 +490,7 @@ function onLutronMouseover(el=null) {
             // This is a circuit!
             
             svg.selectAll('#' + e + ' circle, #' + e + ' rect').each( function() {
-                let tgtbox = el.getBBox();
+                let tgtbox = this.getBBox();
 
                 lines.append('line')
                     .attr('x1', srcbox.x + srcbox.width / 2)
@@ -527,6 +525,28 @@ function onLutronMouseout() {
         .attr('opacity', 1);
 }
 
+/** When mouseup on a lutron remote: */
+function onRemoteMouseup() {
+
+    // Don't change anything.
+    d3.selectAll("svg #fixtures > *")
+        .attr("opacity", 1);
+
+    if (dragline !== null) {
+        dragline.remove();
+        dragline = null;
+    }
+}
+
+/** When mouseup on lutron controller */
+function onControllerMouseup() {
+
+    d3.selectAll("svg #fixtures > *")
+    .attr("opacity", 1);
+
+    // If dragging from remote:
+    endDragline(this);
+}
 
 /************************************/
 /* Backend Functions                */
@@ -596,18 +616,7 @@ function saveDeviceDetails(e) {
             .on('mouseout', onLutronMouseout)
             .on('mousedown', beginDragline)
             .on('mousemove', moveDragline)
-            .on('mouseup', function() {
-
-                // If user releases mouse on lutron remote,
-                // don't change anything.
-                d3.selectAll("svg #fixtures > *")
-                    .attr("opacity", 1);
-
-                if (dragline !== null) {
-                    dragline.remove();
-                    dragline = null;
-                }
-            });
+            .on('mouseup', onRemoteMouseup);
 
         fixtures[selected.attr('id')].shape = 'circle';
 
@@ -629,14 +638,7 @@ function saveDeviceDetails(e) {
             .on('mouseout', onLutronMouseout)
             .on('mousedown', beginDragline)
             .on('mousemove', moveDragline)
-            .on('mouseup', function() {
-
-                d3.selectAll("svg #fixtures > *")
-                    .attr("opacity", 1);
-
-                // If dragging from remote:
-                endDragline(this);
-            });
+            .on('mouseup', onControllerMouseup);
 
         fixtures[selected.attr('id')].shape = 'rect';
 
@@ -659,8 +661,6 @@ function updatePriceEst() {
 /** Allows for downloading sketch as JSON file. 
  * Exports the 'fixtures' data object as JSON in 'sketch.csta' file. */
 function saveSketchFile(e) {
-    e = e || window.event;
-    e.preventDefault();
 
     // Save locations in SVG:
     deselectFixt();
@@ -676,17 +676,61 @@ function saveSketchFile(e) {
 
 /** Loads previously saved JSON file. */
 function loadSketchFile(e) {
-    e = e || window.event;
-    e.preventDefault();
+    let file = e.target.files[0];
+    idxCounter = 0;
 
-    // Save locations in SVG:
-    deselectFixt();
+    let reader = new FileReader();
+    reader.addEventListener("load", function(e) {
+        console.log(reader.result);
+        let newFixtures = JSON.parse(reader.result);
 
-    let data = new Blob([JSON.stringify(fixtures)], {type: 'application/json'});
-    let url = window.URL.createObjectURL(data);
+        Object.keys(newFixtures).forEach( k => {
 
-    let link = document.getElementById('hidden-link');
-    link.download = 'sketch.csta';
-    link.href = url;
-    link.click();
+            idxCounter++;
+
+            let v = newFixtures[k];
+            let isInit = (v.controls.length ? '' : 'init ');
+
+            if (v.shape == 'rect') {
+                // Is a controller:
+
+                acc.append('rect')
+                    .attr('id', k)
+                    .attr('class', isInit + 'lutron')
+                    .attr('x', v.loc[0] - 8)
+                    .attr('y', v.loc[1] - 8)
+                    .attr('width', 16)
+                    .attr('height', 16)
+                    .attr('draggable', 'true')
+                    .on('click', fixtureClick)
+                    .on('mouseover', onLutronMouseover)
+                    .on('mouseout', onLutronMouseout)
+                    .on('mousedown', beginDragline)
+                    .on('mousemove', moveDragline)
+                    .on('mouseup', onControllerMouseup);
+            }
+
+            else if (v.shape == 'circle') {
+                // Is a remote:
+
+                acc.append('circle')
+                    .attr('id', k)
+                    .attr('class', isInit + 'lutron remote')
+                    .attr('cx', v.loc[0])
+                    .attr('cy', v.loc[1])
+                    .attr('r', 8)
+                    .attr('draggable', 'true')
+                    .on('click', fixtureClick)
+                    .on('mouseover', onLutronMouseover)
+                    .on('mouseout', onLutronMouseout)
+                    .on('mousedown', beginDragline)
+                    .on('mousemove', moveDragline)
+                    .on('mouseup', onRemoteMouseup);
+            }
+        });
+
+        delete fixtures;
+        fixtures = newFixtures;
+    });
+    reader.readAsText(file);
 }
