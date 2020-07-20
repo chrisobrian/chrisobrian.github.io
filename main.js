@@ -677,7 +677,16 @@ function saveSketchFile(e) {
 /** Loads previously saved JSON file. */
 function loadSketchFile(e) {
     let file = e.target.files[0];
+
+    if (!/\.csta$/.test(file.name)) {
+        // Invalid file
+        alert("This is not a valid design file.");
+        return;
+    }
+    
+    // Reset idxCounter and clear old devices:
     idxCounter = 0;
+    acc.node().innerHTML = '';
 
     let reader = new FileReader();
     reader.addEventListener("load", function(e) {
@@ -686,10 +695,16 @@ function loadSketchFile(e) {
 
         Object.keys(newFixtures).forEach( k => {
 
+            // Meta
             idxCounter++;
-
             let v = newFixtures[k];
             let isInit = (v.controls.length ? '' : 'init ');
+
+            // Update pricing:
+            minPrice += v.price[0];
+            maxPrice += v.price[1];
+
+            // Add figures to SVG:
 
             if (v.shape == 'rect') {
                 // Is a controller:
@@ -731,6 +746,9 @@ function loadSketchFile(e) {
 
         delete fixtures;
         fixtures = newFixtures;
+
+        updatePriceEst();
     });
+    
     reader.readAsText(file);
 }

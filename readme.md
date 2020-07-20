@@ -32,7 +32,7 @@ Similarly, selected devices can be deleted using the *backspace* key.
 
 ### Saving & Loading Designs
 
-This functionality is in the works and still a couple days away!
+This tool also includes basic saving and loading functionality. To save your current design, click the button at the bottom and it'll download the save file. You can later use the load button to load the saved design file.
 
 
 ## Price Information
