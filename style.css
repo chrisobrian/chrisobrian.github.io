@@ -166,6 +166,27 @@ footer p {
     font-size: 18pt;
 }
 
+.bottom-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    padding: 50px 0 20px;
+}
+
+.bottom-buttons button {
+    margin: 0 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    
+    background: #0099d7;
+    color: white;
+    font-size: 12pt;
+
+    cursor: pointer;
+}
+
 /************************************/
 /* SVG Elements                     */
 /************************************/

@@ -79,10 +79,12 @@ function selectFixt(id, loc=null) {
 function deselectFixt() {
     if (selected === null) return;
 
+    let loc = selected.node().getBBox();
+
     selected.classed('selected', false);
     
-    fixtures[selected.attr('id')].loc[0] = Number(selected.attr('x'));
-    fixtures[selected.attr('id')].loc[1] = Number(selected.attr('y'));
+    fixtures[selected.attr('id')].loc[0] = loc.x + loc.width / 2;
+    fixtures[selected.attr('id')].loc[1] = loc.y + loc.height / 2;
 
     newFixtDiv.style.display = 'none';
     selectedFixtDiv.style.display = 'none';
@@ -141,16 +143,11 @@ function onPageLoad() {
                 .on('mousemove', moveDragline)
                 .on('mouseup', function() {
 
-                    // If user releases mouse on lutron device,
-                    // don't change anything.
                     d3.selectAll("svg #fixtures > *")
                         .attr("opacity", 1);
 
-                    if (dragline !== null) {
-                        dragline.remove();
-                        dragline = null;
-                    }
-
+                    // If dragging from remote:
+                    endDragline(this);
                 });
 
             // Create data object:
@@ -186,6 +183,8 @@ function onPageLoad() {
 
     // Add regular event listeners:
     document.getElementById('selected-fixture-form').addEventListener('submit', saveDeviceDetails);
+    document.getElementById('save-button').addEventListener('click', saveSketchFile);
+    document.getElementById('load-button').addEventListener('click', loadSketchFile);
 }
 
 
@@ -308,7 +307,7 @@ function beginDragline() {
 
     if (selected === null) return;
 
-    let t = d3.select(this);
+    let srcbox = this.getBBox();
     let loc = d3.mouse(this);
 
     // Only allowed to drag currently selected lutron device
@@ -316,8 +315,8 @@ function beginDragline() {
 
     dragline = acc.append('line')
         .attr('id', 'dragline')
-        .attr('x1', Number(t.attr('x')) + 5)
-        .attr('y1', Number(t.attr('y')) + 5)
+        .attr('x1', srcbox.x + srcbox.width / 2)
+        .attr('y1', srcbox.y + srcbox.height / 2)
         .attr('x2', loc[0])
         .attr('y2', loc[1]);
 
@@ -392,9 +391,12 @@ function onDraglineMouseout() {
 
 
 /** When user releases mouse WHILE hovering on a circuit/fixture */
-function endDragline() {
+function endDragline(el) {
 
     if(selected === null || dragline === null) return;
+
+    el = el || this;
+    console.log(el);
 
     // Clean up dragline:
     d3.selectAll("svg #fixtures > *")
@@ -403,10 +405,19 @@ function endDragline() {
     dragline.remove();
     dragline = null;
 
+    if (el.parentElement.id == 'lutron' && selected.classed('remote')) {
+        // A remote is trying to control a lutron fixture!
+        if (fixtures[el.id].shape != 'rect') return;
+
+        fixtures[selected.attr('id')].controls.push(el.id);
+        d3.select(el).classed('remote-controlled', true);
+        selected.classed('init', false);
+    }
+
     // Add this circuit/fixture to controller's domain!
-    if (this.parentElement.id != 'fixtures') {
+    else if (el.parentElement.id != 'fixtures' && !selected.classed('remote')) {
         // This means fixture is in a circuit (or is a circuit)
-        let p = this.parentElement;
+        let p = el.parentElement;
 
         if (d3.select(p).classed('controlled')) {
             alert("There is already a Lutron device controlling this circuit!");
@@ -415,20 +426,19 @@ function endDragline() {
 
         fixtures[selected.attr('id')].controls.push(p.id);
         d3.select(p).classed('controlled', true);
+        selected.classed('init', false);
     }
-    else {
+    else if (!selected.classed('remote')) {
         // Fixture is standalone.
-        if (d3.select(this).classed('controlled')) {
+        if (d3.select(el).classed('controlled')) {
             alert("There is already a Lutron device controlling this fixture!");
             return;
         }
 
-        fixtures[selected.attr('id')].controls.push(this.id);
-        d3.select(this).classed('controlled', true);
+        fixtures[selected.attr('id')].controls.push(el.id);
+        d3.select(el).classed('controlled', true);
+        selected.classed('init', false);
     }
-
-    //selectedFixtDiv.style.display = 'block';
-    selected.classed('init', false);
 }
 
 
@@ -440,7 +450,6 @@ function fixtureClick(id=null) {
     if(selected !== null && d3.event.shiftKey) {
         let t = d3.select(this);
         let loc = d3.mouse(this);
-        // console.log(window.event.target);
 
         // Only allowed to dragline currently selected lutron device
         if(selected.attr('id') === null || id !== selected.attr('id')) return;
@@ -459,11 +468,14 @@ function fixtureClick(id=null) {
 
 
 /** Hover handler for lutron devices */
-function onLutronMouseover() {
+function onLutronMouseover(el=null) {
+
+    el = el || this;
+    
     d3.selectAll('svg #fixtures > *, svg #lutron > *')
         .attr('opacity', 0.2);
 
-    let device = d3.select(this);
+    let device = d3.select(el);
     let srcbox = device.node().getBBox();
 
     let lines = svg.append('g')
@@ -471,7 +483,7 @@ function onLutronMouseover() {
 
     device.attr('opacity', 1);
 
-    fixtures[this.id].controls.forEach( e => {
+    fixtures[el.id].controls.forEach( e => {
 
         let tgt = d3.select('#' + e);
         tgt.attr('opacity', 1);
@@ -480,7 +492,7 @@ function onLutronMouseover() {
             // This is a circuit!
             
             svg.selectAll('#' + e + ' circle, #' + e + ' rect').each( function() {
-                let tgtbox = this.getBBox();
+                let tgtbox = el.getBBox();
 
                 lines.append('line')
                     .attr('x1', srcbox.x + srcbox.width / 2)
@@ -569,7 +581,8 @@ function saveDeviceDetails(e) {
 
     // Update device shape:
     let isRemote = /^pico-/.test(select.options[select.selectedIndex].value);
-    if (isRemote && selected.node().tagNmae != 'circle') {
+
+    if (isRemote && fixtures[selected.attr('id')].shape != 'circle') {
         // Need to make a circle!
         let next = acc.append('circle')
             .attr('id', selected.attr('id'))
@@ -585,7 +598,7 @@ function saveDeviceDetails(e) {
             .on('mousemove', moveDragline)
             .on('mouseup', function() {
 
-                // If user releases mouse on lutron device,
+                // If user releases mouse on lutron remote,
                 // don't change anything.
                 d3.selectAll("svg #fixtures > *")
                     .attr("opacity", 1);
@@ -601,13 +614,13 @@ function saveDeviceDetails(e) {
         selected.remove();
         selected = next;
     }
-    else if (!isRemote && selected.node().tagName != 'rect') {
+    else if (!isRemote && fixtures[selected.attr('id')].shape != 'rect') {
         // Need to make a rect!
         let next = acc.append('rect')
             .attr('id', selected.attr('id'))
             .attr('class', selected.attr('class'))
-            .attr('x', Number(selected.attr('cx')) + 4)
-            .attr('y', Number(selected.attr('cy')) + 4)
+            .attr('x', Number(selected.attr('cx')) - 8)
+            .attr('y', Number(selected.attr('cy')) - 8)
             .attr('width', 16)
             .attr('height', 16)
             .attr('draggable', 'true')
@@ -618,15 +631,11 @@ function saveDeviceDetails(e) {
             .on('mousemove', moveDragline)
             .on('mouseup', function() {
 
-                // If user releases mouse on lutron device,
-                // don't change anything.
                 d3.selectAll("svg #fixtures > *")
                     .attr("opacity", 1);
 
-                if (dragline !== null) {
-                    dragline.remove();
-                    dragline = null;
-                }
+                // If dragging from remote:
+                endDragline(this);
             });
 
         fixtures[selected.attr('id')].shape = 'rect';
@@ -638,10 +647,46 @@ function saveDeviceDetails(e) {
     deselectFixt();
 }
 
+/** Updates price estimate on screen */
 function updatePriceEst() {
     let minSpan = document.getElementById('price-est-min');
     let maxSpan = document.getElementById('price-est-max');
 
     minSpan.innerHTML = minPrice;
     maxSpan.innerHTML = maxPrice;
+}
+
+/** Allows for downloading sketch as JSON file. 
+ * Exports the 'fixtures' data object as JSON in 'sketch.csta' file. */
+function saveSketchFile(e) {
+    e = e || window.event;
+    e.preventDefault();
+
+    // Save locations in SVG:
+    deselectFixt();
+
+    let data = new Blob([JSON.stringify(fixtures)], {type: 'application/json'});
+    let url = window.URL.createObjectURL(data);
+
+    let link = document.getElementById('hidden-link');
+    link.download = 'sketch.csta';
+    link.href = url;
+    link.click();
+}
+
+/** Loads previously saved JSON file. */
+function loadSketchFile(e) {
+    e = e || window.event;
+    e.preventDefault();
+
+    // Save locations in SVG:
+    deselectFixt();
+
+    let data = new Blob([JSON.stringify(fixtures)], {type: 'application/json'});
+    let url = window.URL.createObjectURL(data);
+
+    let link = document.getElementById('hidden-link');
+    link.download = 'sketch.csta';
+    link.href = url;
+    link.click();
 }
