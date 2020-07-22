@@ -1,11 +1,14 @@
-# Lutron Caséta Layout Tool (Bright Ideas Electrical)
+# Lutron Caséta Layout Tool
 
 **The interactive tool is web-based and accessible at [cobrian59.github.io](https://cobrian59.github.io).**
+
+### Credit
+
+This projet was conceived and developed by [Chris O'Brian](mailto:cobrian59@gmail.com) for the Lutron ALT Experience group project.
 
 ### Purpose
 
 This interactive tool is designed to be a lightweight and simple means for laying out a potential Lutron Caséta home setup. The purpose is twofold; this can be used by members of the electrical contractor firm to quickly "sketch" options for the consumer, or it can be used by the consumer to help them determine their own custom setup that fits their needs best.
-
 
 ## Instructions
 
