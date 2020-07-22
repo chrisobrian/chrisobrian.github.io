@@ -4,7 +4,7 @@
 
 ### Credit
 
-This projet was conceived and developed by [Chris O'Brian](mailto:cobrian59@gmail.com) for the Lutron ALT Experience group project.
+This project was conceived and developed by [Chris O'Brian](mailto:cobrian59@gmail.com) for the Lutron ALT Experience group project.
 
 ### Purpose
 
@@ -38,9 +38,9 @@ Similarly, selected devices can be deleted using the *backspace* key.
 This tool also includes basic saving and loading functionality. To save your current design, click the button at the bottom and it'll download the save file. You can later use the load button to load the saved design file.
 
 
-## Price Information
+## Cost Information
 
-This tool includes rudimentary pricing information available based on the current Lutron devices. The price range at the top of the screen is the cumulative total price range of all Lutron devices in the design. 
+This tool includes rudimentary pricing and energy savings information available based on the current Lutron devices. The price range at the top of the screen is the cumulative total price range of all Lutron devices in the design. Pricing information is taken from the trade brochure.
 
 This price is given as a _range_ as there is variances in pricing of some Lutron devices due to color, button inscriptions, etc. The price range is solely based on the Lutron device cost as of now, and **does not account for**:
 
@@ -50,7 +50,11 @@ This price is given as a _range_ as there is variances in pricing of some Lutron
 - Cost of new-construction electrical equipment (wall boxes, wiring, breakers, etc.)
 
 
-Pricing information is taken from the trade brochure.
+### Energy Savings (_in-progress_)
+
+<!-- This tool also provides a _rough_ estimate for the possible amount of energy savings possible with the current design. This is based on the following information:
+
+TBC -->
 
 
 ## Disclaimer
