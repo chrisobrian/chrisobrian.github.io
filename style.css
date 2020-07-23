@@ -85,6 +85,7 @@ footer p {
     padding: 0;
     position: relative;
     margin: 0 auto;
+    clear: both;
 }
 
 #new-fixture-window, #selected-fixture-window {

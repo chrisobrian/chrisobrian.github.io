@@ -181,6 +181,7 @@ function onPageLoad() {
         input.click();
     });
     document.getElementById('load-input').addEventListener('change', loadSketchFile);
+    document.getElementById('load-example').addEventListener('click', () => loadPresetFile('example-sketch.csta'));
 }
 
 
@@ -689,9 +690,11 @@ function loadSketchFile(e) {
         return;
     }
     
-    // Reset idxCounter and clear old devices:
+    // Reset idxCounter and clear old devices / prices:
     idxCounter = 0;
     acc.node().innerHTML = '';
+    minPrice = 0;
+    maxPrice = 0;
 
     let reader = new FileReader();
     reader.addEventListener("load", function(e) {
@@ -756,4 +759,80 @@ function loadSketchFile(e) {
     });
     
     reader.readAsText(file);
+}
+
+
+
+/** Loads preset file */
+function loadPresetFile(fl) {
+    
+    d3.json(fl).then( data => {
+
+        // Reset idxCounter and clear old devices:
+        idxCounter = 0;
+        acc.node().innerHTML = '';
+        minPrice = 0;
+        maxPrice = 0;
+
+        Object.keys(data).forEach( k => {
+
+            // Meta
+            idxCounter++;
+            let v = data[k];
+            let isInit = (v.controls.length ? '' : 'init ');
+
+            // Update pricing:
+            minPrice += v.price[0];
+            maxPrice += v.price[1];
+
+            // Add figures to SVG:
+
+            if (v.shape == 'rect') {
+                // Is a controller:
+
+                acc.append('rect')
+                    .attr('id', k)
+                    .attr('class', isInit + 'lutron')
+                    .attr('x', v.loc[0] - 8)
+                    .attr('y', v.loc[1] - 8)
+                    .attr('width', 16)
+                    .attr('height', 16)
+                    .attr('draggable', 'true')
+                    .on('click', fixtureClick)
+                    .on('mouseover', onLutronMouseover)
+                    .on('mouseout', onLutronMouseout)
+                    .on('mousedown', beginDragline)
+                    .on('mousemove', moveDragline)
+                    .on('mouseup', onControllerMouseup);
+            }
+
+            else if (v.shape == 'circle') {
+                // Is a remote:
+
+                acc.append('circle')
+                    .attr('id', k)
+                    .attr('class', isInit + 'lutron remote')
+                    .attr('cx', v.loc[0])
+                    .attr('cy', v.loc[1])
+                    .attr('r', 8)
+                    .attr('draggable', 'true')
+                    .on('click', fixtureClick)
+                    .on('mouseover', onLutronMouseover)
+                    .on('mouseout', onLutronMouseout)
+                    .on('mousedown', beginDragline)
+                    .on('mousemove', moveDragline)
+                    .on('mouseup', onRemoteMouseup);
+            }
+            v.controls.forEach( e => {
+                d3.select('#' + e).classed('controlled', true);
+            });
+        });
+
+        delete fixtures;
+        fixtures = data;
+        updatePriceEst();
+
+    }, error => {
+        console.log(error);
+    });
 }
