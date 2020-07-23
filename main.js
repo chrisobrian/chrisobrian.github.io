@@ -666,6 +666,11 @@ function saveSketchFile(e) {
     deselectFixt();
 
     let data = new Blob([JSON.stringify(fixtures)], {type: 'application/json'});
+    if (data.size <= 2) 
+        // There are no fixtures.
+        return;
+
+
     let url = window.URL.createObjectURL(data);
 
     let link = document.getElementById('hidden-link');

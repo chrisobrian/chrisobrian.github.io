@@ -20,9 +20,20 @@
     </header>
 
     <div id="main-content" class="body-container">
-        <div id="price-est">
+        <div id="price-est" class="estimate-div">
             <p>
                 Price Range Estimate: $<span id="price-est-min">0</span> - $<span id="price-est-max">0</span>
+            </p>
+            <p>
+                Disclaimer
+            </p>
+        </div>
+        <div id="energy-est" class="estimate-div">
+            <p>
+                Max Annual Energy Savings: $<span id="energy-est">0</span>
+            </p>
+            <p>
+                Disclaimer
             </p>
         </div>
         <div id="svg-container">
@@ -231,6 +242,8 @@
         </div>
 
         <div class="bottom-buttons">
+            <p>Options:</p>
+
             <button id="save-button">Save Sketch</button>
             <button id="load-button">Load Sketch</button>
             
@@ -241,7 +254,17 @@
             <a id="hidden-link" class="hidden" href=""></a>
         </div>
 
-        <div class="footnotes">
+        <div class="bottom-buttons">
+            <p>Package Presets:</p>
+
+            <button id="button-pkg-1">Load Package 1</button>
+            <button id="button-pkg-2">Load Package 2</button>
+            <button id="button-pkg-3">Load Package 3</button>
+        </div>
+
+
+
+        <div class="footnotes hidden">
             <p>Energy Usage: Calculated based on data from eia.gov which states average PA resident spends ~14 cents per kWh. Also, this statistic assumes lights are on all day (10 hours) without a Lutron controller; Lutron controller schedule adjusts lights to run for 4 hours per day.
                 
                 Assuming:

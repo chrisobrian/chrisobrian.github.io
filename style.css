@@ -157,28 +157,57 @@ footer p {
     text-indent: -5000px;
 }
 
-#price-est {
+.estimate-div {
+    width: 100%;
+    padding: 0 100px;
+}
+
+.estimate-div p {
+    display: block;
+    width: 50%;
+}
+
+.estimate-div p:first-of-type {
+    /* text-align: center; */
+    font-size: 18pt;
+    float: left;
+    clear: left;
+}
+
+.estimate-div p:last-of-type {
+    float: right;
+}
+
+#energy-est {
     margin-bottom: 20px;
 }
 
-#price-est p {
-    text-align: center;
-    font-size: 18pt;
+.bottom-buttons {
+    margin: 30px 100px;
+    padding: 12px;
+    overflow: hidden;
+    border-radius: 4px;
+    border: 1px solid #222;
 }
 
-.bottom-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-
-    padding: 50px 0 20px;
+.bottom-buttons p {
+    float: left;
+    width: 200px;
+    margin: 0;
+    font-size: 16pt;
+    font-weight: bold;
+    line-height: 40px;
+    height: 40px;
+    vertical-align: middle;
 }
 
 .bottom-buttons button {
-    margin: 0 20px;
-    padding: 10px;
+    margin: 0 15px;
+    padding: 0 10px;
+    height: 40px;
     border: none;
     border-radius: 4px;
+    float: right;
     
     background: #0099d7;
     color: white;
@@ -186,6 +215,14 @@ footer p {
 
     cursor: pointer;
 }
+
+.bottom-buttons button:hover, .bottom-buttons button:focus {
+    opacity: 0.8;
+} 
+
+.bottom-buttons button:active {
+    filter: brightness(0.8);
+} 
 
 /************************************/
 /* SVG Elements                     */
