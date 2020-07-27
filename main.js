@@ -1,3 +1,15 @@
+/**
+ * main.js -- Provides interactivity and functionality
+ * for HTML-based Caséta Layout Tool.
+ *
+ * @summary Caséta Layout Tool Implementation
+ * @author Chris O'Brian <cobrian59@gmail.com>
+ *
+ * Created at     : 2020-07-18 15:00:00
+ * Last modified  : 2020-07-27 15:08:39
+ */
+
+
 // Constants and main variables:
 const svgH = 694;
 const svgW = 903;

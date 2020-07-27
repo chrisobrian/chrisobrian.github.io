@@ -63,4 +63,6 @@ TBC -->
 
 ## Disclaimer
 
-The _Lutron_ and _Lutron Caséta_ names both belong to the Lutron Electronics Co. Any/all Caséta product names used in this tool also belong to the Lutron Electronics Co.
+The _Lutron_ and _Lutron Caséta_ names, along with any/all Caséta product names used in this tool belong to the [Lutron Electronics Co.](https://www.lutron.com/en-US/pages/default.aspx)
+
+This tool uses the [d3 Javascript Library](https://d3js.org), Copyright 2020 Mike Bostock.
