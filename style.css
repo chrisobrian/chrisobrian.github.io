@@ -107,11 +107,11 @@ footer p {
     text-align: center;
 }
 
-#selected-fixture-form{
+#selected-fixture-form {
     width: 100%;
 }
 
-#selected-fixture-form label {
+#selected-fixture-form label, #selected-fixture-form p {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
@@ -146,6 +146,14 @@ footer p {
 #selected-fixture-form input[type='submit']:active{
     filter: brightness(0.9);
     box-shadow: 1px 1px 3px inset black;
+}
+
+#selected-fixture-form p span {
+    display: block;
+}
+
+#selected-fixture-form #device-price {
+    font-weight: bold;
 }
 
 .sr-only {
@@ -197,13 +205,15 @@ footer p {
     margin: 0;
     font-size: 16pt;
     font-weight: bold;
+    font-style: italic;
+    color: #555;
     line-height: 40px;
     height: 40px;
     vertical-align: middle;
 }
 
 .bottom-buttons button {
-    margin: 0 15px;
+    margin: 0 10px;
     padding: 0 10px;
     height: 40px;
     border: none;
@@ -280,9 +290,9 @@ svg #lutron > path.selected {
     stroke: none !important;
 }
 
-svg #lutron > circle.selected.move, svg #lutron > rect.selected.move, 
-svg #lutron > path.selected.move {
-    fill: lightcoral !important;
+svg #lutron > circle.bridge, svg #lutron > rect.bridge, 
+svg #lutron > path.bridge {
+    fill: lightcoral;
 }
 
 svg line#dragline, svg line.dragline {

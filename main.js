@@ -1,14 +1,19 @@
+// Constants and main variables:
 const svgH = 694;
 const svgW = 903;
 
-var svg, main, acc, newFixtDiv, selectedFixtDiv;
 var minPrice = 0, maxPrice = 0;
 
 var idxCounter = 0;
 var dragline = null;
 var draglineOver = null;
 var selected = null;
-var fixtures = {};
+var devices = {};
+
+
+// Commonly referenced DOM elements:
+var svg, main, acc, newFixtDiv, selectedFixtDiv;
+
 
 /************************************/
 /* Pricing & Device Information     */
@@ -41,14 +46,18 @@ prices = {
     'acc-carclip'           : [9, 9],
     'acc-pedestal-1'        : [15, 25],
     'acc-pedestal-2'        : [30, 40],
-    'acc-pedestal-3'        : [100, 100]
+    'acc-pedestal-3'        : [100, 100],
+
+    // Bridge & Repeater
+    'bridge'                : [110, 110],
+    'repeater'              : [100, 100]
 };
 
 function newDevice(id, location) {
     return {
         'id'        : id,
         'name'      : '',
-        'type'      : 'dimmer',
+        'type'      : 'none',
         'acc'       : 'none',
         'shape'     : 'rect',
         'loc'       : location,
@@ -83,8 +92,8 @@ function deselectFixt() {
 
     selected.classed('selected', false);
     
-    fixtures[selected.attr('id')].loc[0] = loc.x + loc.width / 2;
-    fixtures[selected.attr('id')].loc[1] = loc.y + loc.height / 2;
+    devices[selected.attr('id')].loc[0] = loc.x + loc.width / 2;
+    devices[selected.attr('id')].loc[1] = loc.y + loc.height / 2;
 
     newFixtDiv.style.display = 'none';
     selectedFixtDiv.style.display = 'none';
@@ -114,7 +123,9 @@ function onPageLoad() {
     acc = d3.select("#lutron");
 
 
-    // Onclick event for adding new lutron fixtures:
+
+
+    // Onclick event for adding new lutron devices:
     svg.on("mousedown", function() {
         if (d3.event.target.id != "main") return;
 
@@ -144,7 +155,7 @@ function onPageLoad() {
                 .on('mouseup', onControllerMouseup);
 
             // Create data object:
-            fixtures[newId] = newDevice(newId, loc);
+            devices[newId] = newDevice(newId, loc);
             
             // Select new fixture & show "new fixture" dialog:
             selectFixt(newId, loc);
@@ -173,15 +184,22 @@ function onPageLoad() {
         .on("mouseout", onDraglineMouseout)
         .on("mouseup", endDragline);
 
-    // Add regular event listeners:
+    // Event listeners for info window:
     document.getElementById('selected-fixture-form').addEventListener('submit', saveDeviceDetails);
+    document.getElementById('device-input').addEventListener('change', updateInfoWindowPrice);
+    document.getElementById('includes-input').addEventListener('change', updateInfoWindowPrice);
+    
+
+    // For buttons at bottom of page:
     document.getElementById('save-button').addEventListener('click', saveSketchFile);
     document.getElementById('load-button').addEventListener('click', function() {
         let input = document.getElementById('load-input');
         input.click();
     });
     document.getElementById('load-input').addEventListener('change', loadSketchFile);
-    document.getElementById('load-example').addEventListener('click', () => loadPresetFile('example-sketch.csta'));
+    
+    document.getElementById('button-pkg-1').addEventListener('click', 
+        () => loadPresetFile('sketches/essentials-sketch.csta'));
 }
 
 
@@ -226,18 +244,27 @@ function onKeyStroke(code) {
         // Backspace key
         selected.remove();
 
-        let fixt = fixtures[selected.attr('id')];
+        let fixt = devices[selected.attr('id')];
 
         fixt.controls.forEach(e => {
             d3.select('#' + e).classed('controlled', false);
         });
+
+        // Remove references to this controller!
+        Object.keys(devices).forEach( dev => {
+            devices[dev].controls = devices[dev].controls.filter(id => id != selected.attr('id'));
+            
+            if (devices[dev].controls.length == 0 &&
+                devices[dev].type != 'bridge' && devices[dev].type != 'repeater')
+                d3.select('#' + dev).classed('init', true);
+        })
 
         minPrice -= fixt.price[0];
         maxPrice -= fixt.price[1];
 
         updatePriceEst();
 
-        delete fixtures[selected.attr('id')];
+        delete devices[selected.attr('id')];
         selected = null;
     }
 
@@ -302,7 +329,9 @@ var circuitHover = null;
 /** Begins dragline process */
 function beginDragline() {
 
-    if (selected === null) return;
+    if (selected === null ||
+        devices[selected.attr('id')].type == 'bridge' ||
+        devices[selected.attr('id')].type == 'repeater') return;
 
     let srcbox = this.getBBox();
     let loc = d3.mouse(this);
@@ -364,10 +393,11 @@ function onDraglineMouseover() {
 }
 
 function onDraglineMousemove() {
+    if (dragline === null) return;
+    
     let loc = d3.mouse(this);
 
-    dragline
-        .attr('x2', loc[0])
+    dragline.attr('x2', loc[0])
         .attr('y2', loc[1]);
 }
 
@@ -404,9 +434,9 @@ function endDragline(el) {
 
     if (el.parentElement.id == 'lutron' && selected.classed('remote')) {
         // A remote is trying to control a lutron fixture!
-        if (fixtures[el.id].shape != 'rect') return;
+        if (devices[el.id].shape != 'rect') return;
 
-        fixtures[selected.attr('id')].controls.push(el.id);
+        devices[selected.attr('id')].controls.push(el.id);
         d3.select(el).classed('remote-controlled', true);
         selected.classed('init', false);
     }
@@ -421,7 +451,7 @@ function endDragline(el) {
             return;
         }
 
-        fixtures[selected.attr('id')].controls.push(p.id);
+        devices[selected.attr('id')].controls.push(p.id);
         d3.select(p).classed('controlled', true);
         selected.classed('init', false);
     }
@@ -432,7 +462,7 @@ function endDragline(el) {
             return;
         }
 
-        fixtures[selected.attr('id')].controls.push(el.id);
+        devices[selected.attr('id')].controls.push(el.id);
         d3.select(el).classed('controlled', true);
         selected.classed('init', false);
     }
@@ -466,8 +496,9 @@ function fixtureClick(id=null) {
 
 /** Hover handler for lutron devices */
 function onLutronMouseover(el) {
-
     el = el || this;
+
+    if (devices[el.id].type == 'bridge' || devices[el.id].type == 'repeater') return;
     
     d3.selectAll('svg #fixtures > *, svg #lutron > *')
         .attr('opacity', 0.2);
@@ -480,9 +511,9 @@ function onLutronMouseover(el) {
 
     device.attr('opacity', 1);
 
-    console.log(fixtures[el.id].controls);
+    console.log(devices[el.id].controls);
 
-    fixtures[el.id].controls.forEach( e => {
+    devices[el.id].controls.forEach( e => {
 
         let tgt = d3.select('#' + e);
         tgt.attr('opacity', 1);
@@ -553,19 +584,39 @@ function onControllerMouseup() {
 /* Backend Functions                */
 /************************************/
 
+
+/** Update price displayed in the info window based 
+ *  on selected device type and includes. */
+function updateInfoWindowPrice() {
+    let priceSpan = document.getElementById('device-price');
+
+    let type = document.getElementById('device-input').value || 'none';
+    let inc = document.getElementById('includes-input').value;
+
+    let showPrice = [
+        Math.ceil(0.8 * (prices[type][0] + prices[inc][0])),
+        Math.ceil(0.8 * (prices[type][1] + prices[inc][1]))
+    ];
+
+    priceSpan.innerHTML = '$' + showPrice[0] + ' - $' + showPrice[1];
+}
+
 /** populates device details window when selected  */
 function loadDeviceDetails() {
-    // ....
+
+    let details = devices[selected.attr('id')];
 
     // Update basic info in fixture data object:
     let nameInp = document.getElementById('device-name');
-    nameInp.value = fixtures[selected.attr('id')].name;
+    nameInp.value = details.name;
 
     let select = document.getElementById('device-input');
-    select.value = fixtures[selected.attr('id')].type;
+    select.value = details.type;
 
     let selectInc = document.getElementById('includes-input');
-    selectInc.value = fixtures[selected.attr('id')].acc;
+    selectInc.value = details.acc;
+
+    updateInfoWindowPrice();
 }
 
 /** Executed on submit of "selected fixture" form */
@@ -575,35 +626,44 @@ function saveDeviceDetails(e) {
 
     // Update name info in fixture data object:
     let nameInp = document.getElementById('device-name');
-    fixtures[selected.attr('id')].name = nameInp.value;
+    devices[selected.attr('id')].name = nameInp.value;
     
     // Remove old device pricing from estimate
-    minPrice -= fixtures[selected.attr('id')].price[0];
-    maxPrice -= fixtures[selected.attr('id')].price[1];
+    minPrice -= devices[selected.attr('id')].price[0];
+    maxPrice -= devices[selected.attr('id')].price[1];
 
     // Device Type & Pricing
     let select = document.getElementById('device-input');
+    let newType = select.options[select.selectedIndex].value;
     let newPrice = prices[select.options[select.selectedIndex].value];
-    fixtures[selected.attr('id')].type = select.options[select.selectedIndex].value;
+    devices[selected.attr('id')].type = newType;
 
     // Includes Type & Pricing
     let selectInc = document.getElementById('includes-input');
     let includePrice = prices[selectInc.options[selectInc.selectedIndex].value];
-    fixtures[selected.attr('id')].acc = selectInc.options[selectInc.selectedIndex].value;
+    devices[selected.attr('id')].acc = selectInc.options[selectInc.selectedIndex].value;
 
     // Update estimate with new pricing:
-    fixtures[selected.attr('id')].price = [
+    devices[selected.attr('id')].price = [
         newPrice[0] + includePrice[0],
         newPrice[1] + includePrice[1]
     ];
-    minPrice += fixtures[selected.attr('id')].price[0];
-    maxPrice += fixtures[selected.attr('id')].price[1];
+    minPrice += devices[selected.attr('id')].price[0];
+    maxPrice += devices[selected.attr('id')].price[1];
     updatePriceEst();
 
-    // Update device shape:
-    let isRemote = /^pico-/.test(select.options[select.selectedIndex].value);
+    // Update color if bridge/repeater:
+    if (newType == 'bridge' || newType == 'repeater') {
+        selected.classed('bridge', true);
+        selected.classed('init', false);
+    }
+    else 
+        selected.classed('bridge', false);
 
-    if (isRemote && fixtures[selected.attr('id')].shape != 'circle') {
+    // Update device shape:
+    let isRemote = /^pico-/.test(newType);
+
+    if (isRemote && devices[selected.attr('id')].shape != 'circle') {
         // Need to make a circle!
         let next = acc.append('circle')
             .attr('id', selected.attr('id'))
@@ -619,12 +679,12 @@ function saveDeviceDetails(e) {
             .on('mousemove', moveDragline)
             .on('mouseup', onRemoteMouseup);
 
-        fixtures[selected.attr('id')].shape = 'circle';
+        devices[selected.attr('id')].shape = 'circle';
 
         selected.remove();
         selected = next;
     }
-    else if (!isRemote && fixtures[selected.attr('id')].shape != 'rect') {
+    else if (!isRemote && devices[selected.attr('id')].shape != 'rect') {
         // Need to make a rect!
         let next = acc.append('rect')
             .attr('id', selected.attr('id'))
@@ -641,7 +701,7 @@ function saveDeviceDetails(e) {
             .on('mousemove', moveDragline)
             .on('mouseup', onControllerMouseup);
 
-        fixtures[selected.attr('id')].shape = 'rect';
+        devices[selected.attr('id')].shape = 'rect';
 
         selected.remove();
         selected = next;
@@ -652,11 +712,23 @@ function saveDeviceDetails(e) {
 
 /** Updates price estimate on screen */
 function updatePriceEst() {
+
+    if (minPrice < 0) minPrice = 0;
+    if (maxPrice < 0) maxPrice = 0;
+
     let minSpan = document.getElementById('price-est-min');
     let maxSpan = document.getElementById('price-est-max');
 
-    minSpan.innerHTML = minPrice;
-    maxSpan.innerHTML = maxPrice;
+    // Apply 20% discount to consumer!
+    if (maxPrice == 0) {
+        minSpan.innerHTML = Math.ceil(0.8 * minPrice);
+        maxSpan.innerHTML = Math.ceil(0.8 * maxPrice);
+    } 
+    else {
+        let fee = 80 + (Object.keys(devices).length * 12);
+        minSpan.innerHTML = 80 + Math.ceil(0.8 * minPrice);
+        maxSpan.innerHTML = fee + Math.ceil(0.8 * maxPrice);
+    }
 }
 
 
@@ -665,15 +737,15 @@ function updatePriceEst() {
 /************************************/
 
 /** Allows for downloading sketch as JSON file. 
- * Exports the 'fixtures' data object as JSON in 'sketch.csta' file. */
+ * Exports the 'devices' data object as JSON in 'sketch.csta' file. */
 function saveSketchFile(e) {
 
     // Save locations in SVG:
     deselectFixt();
 
-    let data = new Blob([JSON.stringify(fixtures)], {type: 'application/json'});
+    let data = new Blob([JSON.stringify(devices)], {type: 'application/json'});
     if (data.size <= 2) 
-        // There are no fixtures.
+        // There are no devices.
         return;
 
 
@@ -701,20 +773,22 @@ function initializeNewDevices(newDevices) {
         // Update Meta info
         idxCounter++;
         let v = newDevices[k];
-        let isInit = (v.controls.length ? '' : 'init ');
+        
+        let classes = ['lutron'];
+        if (v.type == 'repeater' || v.type == 'bridge') classes.push('bridge');
+        else if (v.controls.length == 0) classes.push('init');
 
         // Update pricing:
         minPrice += v.price[0];
         maxPrice += v.price[1];
 
         // Add figures to SVG:
-
         if (v.shape == 'rect') {
             // Is a controller:
 
             acc.append('rect')
                 .attr('id', k)
-                .attr('class', isInit + 'lutron')
+                .attr('class', classes.join(' '))
                 .attr('x', v.loc[0] - 8)
                 .attr('y', v.loc[1] - 8)
                 .attr('width', 16)
@@ -726,14 +800,19 @@ function initializeNewDevices(newDevices) {
                 .on('mousedown', beginDragline)
                 .on('mousemove', moveDragline)
                 .on('mouseup', onControllerMouseup);
+
+            v.controls.forEach( d => {
+                d3.select('#' + d).classed('controlled', true);
+            })
         }
 
         else if (v.shape == 'circle') {
             // Is a remote:
+            classes.push('remote');
 
             acc.append('circle')
                 .attr('id', k)
-                .attr('class', isInit + 'lutron remote')
+                .attr('class', classes.join(' '))
                 .attr('cx', v.loc[0])
                 .attr('cy', v.loc[1])
                 .attr('r', 8)
@@ -747,8 +826,8 @@ function initializeNewDevices(newDevices) {
         }
     });
 
-    delete fixtures;
-    fixtures = newDevices;
+    delete devices;
+    devices = newDevices;
 
     updatePriceEst();
 }

@@ -68,6 +68,8 @@
                                 <option value="pico-occupancy-sensor">Wireless Occupancy Sensor</option>
                             </optgroup>
                             <optgroup label="Misc">
+                                <option value="bridge">Smart Bridge</option>
+                                <option value="repeater">Bridge Repeater</option>
                                 <option value="thermostat">Honeywell Wireless Thermostat</option>
                             </optgroup>
                         </select> 
@@ -84,6 +86,11 @@
                             <option value="acc-pedestal-3">Triple Pedestal</option>
                         </select>
                     </label>
+
+                    <p>
+                        <span>Device Cost:</span>
+                        <span id="device-price">$0</span>
+                    </p>
     
                     <label for="submit">
                         <span class="sr-only">Save:</span> 
@@ -242,11 +249,11 @@
         </div>
 
         <div class="bottom-buttons">
-            <p>Options:</p>
+            <p>Options</p>
 
             <button id="save-button">Save Sketch</button>
             <button id="load-button">Load Sketch</button>
-            <button id="load-example">Example Design</button>
+            <!-- <button id="load-example">Example Design</button> -->
             
             <!-- Hidden inputs / links for file handling -->
             <form class="hidden">
@@ -256,11 +263,11 @@
         </div>
 
         <div class="bottom-buttons">
-            <p>Package Presets:</p>
+            <p>Example Designs</p>
 
             <button id="button-pkg-3">Load Package 3</button>
             <button id="button-pkg-2">Load Package 2</button>
-            <button id="button-pkg-1">Load Package 1</button>
+            <button id="button-pkg-1"><em>Essentials</em> Package</button>
         </div>
 
 
@@ -272,7 +279,11 @@
                 Each indoor lamp uses a 8w LED (60w repl.) bulb
                 Each recessed fixture uses a 15w (65 repl.) bulb.
                 Each fluorescent fixture uses 16w LED (32w FL repl.) tube.
-                Each outdoor fixture uses a 11w (120w repl) flood bulb.</p>
+                Each outdoor fixture uses a 11w (120w repl) flood bulb.
+                Lamps are all run for average of 5 hours / day.
+                Attaching lamp to lutron circuit provides maximum savings of 60%.
+            
+            </p>
 
                 <!-- https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a -->
         </div>
