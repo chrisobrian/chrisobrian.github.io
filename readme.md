@@ -42,15 +42,19 @@ This tool also includes basic saving and loading functionality. To save your cur
 
 This tool includes rudimentary pricing and energy savings information available based on the current Lutron devices. The price range at the top of the screen is the cumulative total price range of all Lutron devices in the design. Pricing information is taken from the trade brochure.
 
-This price is given as a _range_ as there is variances in pricing of some Lutron devices due to color, button inscriptions, etc. The price range is solely based on the Lutron device cost as of now, and **does not account for**:
+This price is given as a _range_ as there is variances in pricing of some Lutron devices due to color, button inscriptions, etc. As of now, the price range **does NOT account for**:
 
-- Caséta kit discounts
-- Labor time
+- Caséta kit discounts (_In Progress_)
 - Cost of lighting fixtures
 - Cost of new-construction electrical equipment (wall boxes, wiring, breakers, etc.)
+- Cost of re-wiring circuits and joining separate circuits
+
+But, the price range **DOES include:**
+
+- A labor estimate
 
 
-### Energy Savings (_in-progress_)
+<!-- ### Energy Savings (_in-progress_) -->
 
 <!-- This tool also provides a _rough_ estimate for the possible amount of energy savings possible with the current design. This is based on the following information:
 
