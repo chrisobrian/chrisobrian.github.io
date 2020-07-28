@@ -6,7 +6,7 @@
  * @author Chris O'Brian <cobrian59@gmail.com>
  *
  * Created at     : 2020-07-18 15:00:00
- * Last modified  : 2020-07-27 15:08:39
+ * Last modified  : 2020-07-27 22:16:54
  */
 
 
@@ -212,6 +212,8 @@ function onPageLoad() {
     
     document.getElementById('button-pkg-1').addEventListener('click', 
         () => loadPresetFile('sketches/essentials-sketch.csta'));
+    document.getElementById('button-pkg-2').addEventListener('click', 
+        () => loadPresetFile('sketches/homemaker-sketch.csta'));
 }
 
 
@@ -775,7 +777,7 @@ function saveSketchFile(e) {
 function initializeNewDevices(newDevices) {
     
     // Reset idxCounter and clear old devices & prices:
-    idxCounter = 0;
+    idxCounter = 100;
     acc.node().innerHTML = '';
     minPrice = 0;
     maxPrice = 0;
@@ -783,7 +785,6 @@ function initializeNewDevices(newDevices) {
     Object.keys(newDevices).forEach( k => {
 
         // Update Meta info
-        idxCounter++;
         let v = newDevices[k];
         
         let classes = ['lutron'];
