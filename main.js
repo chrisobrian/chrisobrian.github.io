@@ -6,7 +6,7 @@
  * @author Chris O'Brian <cobrian59@gmail.com>
  *
  * Created at     : 2020-07-18 15:00:00
- * Last modified  : 2020-07-29 19:47:10
+ * Last modified  : 2020-07-29 19:53:01
  */
 
 
@@ -439,7 +439,6 @@ function endDragline(el) {
     if(selected === null || dragline === null) return;
 
     el = el || this;
-    console.log(el);
 
     // Clean up dragline:
     d3.selectAll("svg #fixtures > *")
@@ -526,8 +525,6 @@ function onLutronMouseover(el) {
         .attr('id', 'hoverlines');
 
     device.attr('opacity', 1);
-
-    console.log(devices[el.id].controls);
 
     devices[el.id].controls.forEach( e => {
 
