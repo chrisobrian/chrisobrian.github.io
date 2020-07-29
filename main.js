@@ -6,7 +6,7 @@
  * @author Chris O'Brian <cobrian59@gmail.com>
  *
  * Created at     : 2020-07-18 15:00:00
- * Last modified  : 2020-07-28 22:12:57
+ * Last modified  : 2020-07-29 19:47:10
  */
 
 
@@ -214,6 +214,8 @@ function onPageLoad() {
         () => loadPresetFile('sketches/essentials-sketch.csta'));
     document.getElementById('button-pkg-2').addEventListener('click', 
         () => loadPresetFile('sketches/homemaker-sketch.csta'));
+    document.getElementById('button-pkg-3').addEventListener('click', 
+        () => loadPresetFile('sketches/signature-sketch.csta'));
 }
 
 
