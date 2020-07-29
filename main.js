@@ -6,7 +6,7 @@
  * @author Chris O'Brian <cobrian59@gmail.com>
  *
  * Created at     : 2020-07-18 15:00:00
- * Last modified  : 2020-07-27 22:16:54
+ * Last modified  : 2020-07-28 22:12:57
  */
 
 
@@ -674,6 +674,10 @@ function saveDeviceDetails(e) {
     else 
         selected.classed('bridge', false);
 
+    // Remove init class if thermostat:
+    if (newType == 'thermostat')
+        selected.classed('init', false);
+
     // Update device shape:
     let isRemote = /^pico-/.test(newType);
 
@@ -789,7 +793,7 @@ function initializeNewDevices(newDevices) {
         
         let classes = ['lutron'];
         if (v.type == 'repeater' || v.type == 'bridge') classes.push('bridge');
-        else if (v.controls.length == 0) classes.push('init');
+        else if (v.controls.length == 0 && v.type != 'thermostat') classes.push('init');
 
         // Update pricing:
         minPrice += v.price[0];
