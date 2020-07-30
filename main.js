@@ -6,7 +6,7 @@
  * @author Chris O'Brian <cobrian59@gmail.com>
  *
  * Created at     : 2020-07-18 15:00:00
- * Last modified  : 2020-07-29 20:17:53
+ * Last modified  : 2020-07-29 21:45:42
  */
 
 
@@ -31,7 +31,7 @@ var svg, main, acc, newFixtDiv, selectedFixtDiv;
 /* Pricing & Device Information     */
 /************************************/
 
-prices = {
+const prices = {
     'dimmer'                : [78, 78],
     'dimmer-pro'            : [105, 105],
     'dimmer-elv'            : [145, 145],
@@ -63,6 +63,19 @@ prices = {
     // Bridge & Repeater
     'bridge'                : [110, 110],
     'repeater'              : [100, 100]
+};
+
+const savings = {
+    // 'rect' = 16w LED Fluorescent Tube
+    // 'circle' = 15w LED recessed or outdoor fixture
+    // 'path' = 8w LED lamp
+    
+    // Wattage * 60% savings value * 5 hours / day * 365 days / year 
+    // * 0.001 W / kW * $0.13 / kWh in PA == MAX Annual Energy Savings per fixt.
+    'rect'      : ((0.6 * (16 * 5 * 365)) * 0.001) * 0.13,
+    'circle'    : ((0.6 * (15 * 5 * 365)) * 0.001) * 0.13,
+    'path'      : ((0.6 * (8 * 5 * 365)) * 0.001) * 0.13,
+    'line'      : 0
 };
 
 function newDevice(id, location) {
@@ -748,6 +761,16 @@ function updatePriceEst() {
         minSpan.innerHTML = 80 + Math.ceil(0.8 * minPrice);
         maxSpan.innerHTML = fee + Math.ceil(0.8 * maxPrice);
     }
+
+    // Update Energy savings estimate too:
+    let est = 0;
+    Array.from(document.querySelectorAll('#fixtures rect.controlled, #fixtures circle.controlled, #fixtures path.controlled, #fixtures g.controlled > *')).forEach( el => {
+            el.tagName;
+            est += savings[el.tagName];
+        });
+
+    let estSpan = document.getElementById('energy-est-span');
+    estSpan.innerHTML = Math.ceil(est);
 }
 
 
