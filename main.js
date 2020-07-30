@@ -6,7 +6,7 @@
  * @author Chris O'Brian <cobrian59@gmail.com>
  *
  * Created at     : 2020-07-18 15:00:00
- * Last modified  : 2020-07-29 23:11:17
+ * Last modified  : 2020-07-30 09:48:56
  */
 
 
@@ -498,6 +498,8 @@ function endDragline(el) {
         d3.select(el).classed('controlled', true);
         selected.classed('init', false);
     }
+
+    updatePriceEst();
 }
 
 
