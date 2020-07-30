@@ -809,7 +809,7 @@ function saveSketchFile(e) {
 function initializeNewDevices(newDevices) {
     
     // Reset idxCounter and clear old devices & prices:
-    idxCounter = 100;
+    idxCounter = 200;
     acc.node().innerHTML = '';
     minPrice = 0;
     maxPrice = 0;
