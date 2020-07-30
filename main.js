@@ -6,7 +6,7 @@
  * @author Chris O'Brian <cobrian59@gmail.com>
  *
  * Created at     : 2020-07-18 15:00:00
- * Last modified  : 2020-07-29 21:46:21
+ * Last modified  : 2020-07-29 23:11:17
  */
 
 
@@ -71,12 +71,13 @@ const savings = {
     // 'path' = 8w LED lamp
     
     // Wattage * 60% savings value * 5 hours / day * 365 days / year 
-    // * 0.001 W / kW * $0.13 / kWh in PA == MAX Annual Energy Savings per fixt.
+    // * 0.001 W / kW * $0.14 / kWh in PA == MAX Annual Energy Savings per fixt.
     
-    'rect'      : ((0.6 * (16 * 5 * 365)) * 0.001) * 0.13,
-    'circle'    : ((0.6 * (15 * 5 * 365)) * 0.001) * 0.13,
-    'path'      : ((0.6 * (8 * 5 * 365)) * 0.001) * 0.13,
-    'line'      : 0
+    'rect'      : ((0.6 * (16 * 5 * 365)) * 0.001) * 0.14,
+    'circle'    : ((0.6 * (15 * 5 * 365)) * 0.001) * 0.14,
+    'path'      : ((0.6 * (8 * 5 * 365)) * 0.001) * 0.14,
+
+    'line'      : 0     // Just for functionality
 };
 
 function newDevice(id, location) {

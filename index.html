@@ -16,7 +16,7 @@
 
 <body>
     <header>
-        <h1>Caseta Layout Tool</h1>
+        <h1>Caséta Layout Tool</h1>
     </header>
 
     <div id="main-content" class="body-container">
@@ -268,24 +268,28 @@
 
 
 
-        <div class="footnotes hidden">
-            <p>Energy Usage: Calculated based on data from eia.gov which states average PA resident spends ~14 cents per kWh. Also, this statistic assumes lights are on all day (10 hours) without a Lutron controller; Lutron controller schedule adjusts lights to run for 4 hours per day.
-                
-                Assuming:
-                Each indoor lamp uses a 8w LED (60w repl.) bulb
-                Each recessed fixture or outdoor lamp uses a 15w (65 repl.) bulb.
-                Each fluorescent fixture uses 16w LED (32w FL repl.) tube.
-                Lamps are all run for average of 5 hours / day.
-                Attaching lamp to lutron circuit provides maximum savings of 60%.
+        <div class="footnotes">
+            <p><strong>*Price Range Estimate</strong> is based on the cost of the Caséta products with a 20% discount applied, courtesy of Bright Ideas. The upper bound of the estimate also includes a <em>rough</em> estimate for the labor time costs and the Bright Ideas flat rate. <strong>Please, send us a saved sketch you are considering and we will provide a formal estimate.</strong></p>
             
-            </p>
+            <p><strong>**Max Annual Energy Savings</strong> uses data from <a href="https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a">eia.gov</a> stating that the average PA resident spends ~14 cents per kWh. This statistic is then calculated with the following assumptions:</p>
+            <ul>
+                <li>Each indoor lamp uses a 8w LED (60w repl.) bulb</li>
+                <li>Each recessed fixture or outdoor lamp uses a 15w (65 repl.) bulb</li>
+                <li>Each fluorescent fixture uses 16w LED (32w FL repl.) tube</li>
+                <li>All fixtures are on for an average of 5 hours per day.</li>
+                <li>Attaching a fixture to a Caséta-controlled circuit provides maximum savings of 60%.</li>
+            </ul>
+        </div>
 
-                <!-- https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a -->
+        <div class="logos">
+            <img id="logo-lutron" alt="Caseta by Lutron Logo" src="images/lutron-logo.jpg" />
+            <img id="logo-ideas" alt="Bright Ideas Logo" src="images/logo-main.png" />
         </div>
     </div>
 
     <footer>
         <p>Developed by Chris O'Brian</p>
+        <p class="disclaimer"><strong><em>Disclaimer:</em></strong> The <em>Lutron</em> and <em>Lutron Caséta</em> names, along with any/all Caséta product names used in this tool belong to the <a href="https://www.lutron.com/en-US/pages/default.aspx">Lutron Electronics Co.</a></p>
     </footer>
     <script>onPageLoad();</script>
 </body>

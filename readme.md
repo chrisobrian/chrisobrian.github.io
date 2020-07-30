@@ -42,23 +42,29 @@ This tool also includes basic saving and loading functionality. To save your cur
 
 This tool includes rudimentary pricing and energy savings information available based on the current Lutron devices. The price range at the top of the screen is the cumulative total price range of all Lutron devices in the design. Pricing information is taken from the trade brochure.
 
-This price is given as a _range_ as there is variances in pricing of some Lutron devices due to color, button inscriptions, etc. As of now, the price range **does NOT account for**:
+This price is given as a _range_ as there is variances in pricing of some Lutron devices due to color, button inscriptions, etc. As of now, the price range **DOES NOT account for**:
 
-- Caséta kit discounts (_In Progress_)
+- Caséta kit discounts
 - Cost of lighting fixtures
 - Cost of new-construction electrical equipment (wall boxes, wiring, breakers, etc.)
 - Cost of re-wiring circuits and joining separate circuits
 
 But, the price range **DOES include:**
 
-- A labor estimate
+- Cost of Lutron devices
+- A Bright Ideas labor estimate (upper bound)
 
 
-<!-- ### Energy Savings (_in-progress_) -->
+### Energy Savings
 
-<!-- This tool also provides a _rough_ estimate for the possible amount of energy savings possible with the current design. This is based on the following information:
+This tool also provides a _rough_ estimate for the possible amount of energy savings possible with the current design. This is based on the following information and assumptions:
 
-TBC -->
+- Average PA household pays $0.14 per kWh for electricity ([eia.gov](https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a))
+- Each indoor lamp uses a 8w LED (60w repl.) bulb
+- Each recessed fixture or outdoor lamp uses a 15w (65 repl.) bulb
+- Each fluorescent fixture uses 16w LED (32w FL repl.) tube
+- All fixtures are on for an average of 5 hours per day.
+- Attaching a fixture to a Caséta-controlled circuit provides maximum savings of 60%.
 
 
 ## Disclaimer
