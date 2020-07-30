@@ -20,22 +20,18 @@
     </header>
 
     <div id="main-content" class="body-container">
-        <div id="price-est" class="estimate-div">
-            <p>
-                Price Range Estimate: $<span id="price-est-min">0</span> - $<span id="price-est-max">0</span>
-            </p>
-            <!-- <p>
-                Disclaimer
-            </p> -->
+
+        <div class="estimates-container">
+            <div id="price-est" class="estimate-div">
+                <p>Price Range Estimate*:</p> 
+                <p>$<span id="price-est-min">0</span> - $<span id="price-est-max">0</span></p>
+            </div>
+            <div id="energy-est" class="estimate-div">
+                <p>Max Annual Energy Savings**:</p> 
+                <p>$<span id="energy-est">0</span></p>
+            </div>
         </div>
-        <div id="energy-est" class="estimate-div">
-            <p>
-                Max Annual Energy Savings: $<span id="energy-est">0</span>
-            </p>
-            <!-- <p>
-                Disclaimer
-            </p> -->
-        </div>
+
         <div id="svg-container">
             <div id="selected-fixture-window">
                 <h2>Lutron Device</h2>
@@ -253,7 +249,7 @@
 
             <button id="save-button">Save Sketch</button>
             <button id="load-button">Load Sketch</button>
-            <!-- <button id="load-example">Example Design</button> -->
+            <button id="clear-button">Clear Sketch</button>
             
             <!-- Hidden inputs / links for file handling -->
             <form class="hidden">

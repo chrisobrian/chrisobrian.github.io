@@ -6,7 +6,7 @@
  * @author Chris O'Brian <cobrian59@gmail.com>
  *
  * Created at     : 2020-07-18 15:00:00
- * Last modified  : 2020-07-29 19:53:01
+ * Last modified  : 2020-07-29 20:17:53
  */
 
 
@@ -210,6 +210,8 @@ function onPageLoad() {
     });
     document.getElementById('load-input').addEventListener('change', loadSketchFile);
     
+    document.getElementById('clear-button').addEventListener('click', 
+        () => loadPresetFile('sketches/clear-sketch.csta'));
     document.getElementById('button-pkg-1').addEventListener('click', 
         () => loadPresetFile('sketches/essentials-sketch.csta'));
     document.getElementById('button-pkg-2').addEventListener('click', 
@@ -784,6 +786,10 @@ function initializeNewDevices(newDevices) {
     acc.node().innerHTML = '';
     minPrice = 0;
     maxPrice = 0;
+
+    // Clear controlled devices:
+    svg.selectAll("#fixtures *")
+        .classed('controlled', false);
 
     Object.keys(newDevices).forEach( k => {
 
