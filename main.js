@@ -6,7 +6,7 @@
  * @author Chris O'Brian <cobrian59@gmail.com>
  *
  * Created at     : 2020-07-18 15:00:00
- * Last modified  : 2020-07-29 21:45:42
+ * Last modified  : 2020-07-29 21:46:21
  */
 
 
@@ -72,6 +72,7 @@ const savings = {
     
     // Wattage * 60% savings value * 5 hours / day * 365 days / year 
     // * 0.001 W / kW * $0.13 / kWh in PA == MAX Annual Energy Savings per fixt.
+    
     'rect'      : ((0.6 * (16 * 5 * 365)) * 0.001) * 0.13,
     'circle'    : ((0.6 * (15 * 5 * 365)) * 0.001) * 0.13,
     'path'      : ((0.6 * (8 * 5 * 365)) * 0.001) * 0.13,
