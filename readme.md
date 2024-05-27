@@ -1,6 +1,6 @@
 # Lutron Caséta Layout Tool
 
-**The interactive tool is web-based and accessible at [cobrian59.github.io](https://cobrian59.github.io).**
+**The interactive tool is web-based and accessible at [chrisobrian.github.io](https://chrisobrian.github.io).**
 
 ### Credit
 
